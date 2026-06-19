@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MCurtain 窗簾及工程單據系統 v18 (Mobile Optimized)</title>
+    <title>MCurtain 窗簾及工程單據系統 v19 (Universal / Mac Optimized)</title>
     <style>
         /* 基礎設定及 iOS 安全區域適配 */
         body { 
@@ -12,7 +12,7 @@
             padding: max(15px, env(safe-area-inset-top)) max(15px, env(safe-area-inset-right)) max(15px, env(safe-area-inset-bottom)) max(15px, env(safe-area-inset-left)); 
             color: #4a3f35; margin: 0; line-height: 1.4; -webkit-text-size-adjust: 100%; 
         }
-        .container { max-width: 1150px; background: #ffffff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(84, 61, 43, 0.08); margin: 0 auto; border: 1px solid #ebdcd3; }
+        .container { background: #ffffff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(84, 61, 43, 0.08); margin: 0 auto; border: 1px solid #ebdcd3; max-width: 1150px; }
         
         /* 頂部控制列 */
         .top-ctrl { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: #f2ebe5; padding: 12px 20px; border-radius: 8px; border: 1px solid #e2d4cb; flex-wrap: wrap; gap: 10px; }
@@ -38,31 +38,31 @@
         
         /* 互動元素適配 */
         label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 13px; color: #8e7f75; }
-        input, select, textarea { width: 100%; padding: 14px; border: 1px solid #d1c7bd; border-radius: 8px; box-sizing: border-box; font-size: 16px !important; background-color: #fff; color: #4a3f35; font-family: inherit; transition: border 0.3s; }
+        input, select, textarea { width: 100%; padding: 14px; border: 1px solid #d1c7bd; border-radius: 8px; box-sizing: border-box; font-size: 16px; background-color: #fff; color: #4a3f35; font-family: inherit; transition: border 0.3s, box-shadow 0.3s; }
         select { background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23513c2f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 12px center; background-size: 1em; padding-right: 40px; appearance: none; -webkit-appearance: none; }
         input:focus, select:focus, textarea:focus { border-color: #513c2f; outline: none; box-shadow: 0 0 0 2px rgba(81, 60, 47, 0.2); }
         .check-container { display: flex; align-items: center; gap: 8px; padding-top: 15px; cursor: pointer; font-size: 15px; font-weight: bold; color: #b5651d; }
         .check-container input { width: 24px; height: 24px; accent-color: #b5651d; cursor: pointer; }
         
-        .toggle-section-btn { background-color: #8e7f75; color: #fff; border: none; font-size: 14px; padding: 14px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; margin-bottom: 15px; text-align: left; display: flex; justify-content: space-between; align-items: center; }
+        .toggle-section-btn { background-color: #8e7f75; color: #fff; border: none; font-size: 14px; padding: 14px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; margin-bottom: 15px; text-align: left; display: flex; justify-content: space-between; align-items: center; transition: background-color 0.3s; }
         
         /* 窗戶項目彈性排版 */
-        .window-item { background: #fff; border: 1px solid #ebdcd3; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .window-item { background: #fff; border: 1px solid #ebdcd3; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: box-shadow 0.3s; }
         .win-flex-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; align-items: flex-end; }
         .win-sub-box { background: #faf7f2; padding: 15px; border-radius: 8px; border: 1px dashed #d1c7bd; display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
         
-        .remove-btn { background-color: #d9a094; color: white; border: none; padding: 14px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; width: 100%; }
-        .add-btn { background-color: #fff; color: #664e3f; padding: 18px; border: 2px dashed #a89485; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; margin-bottom: 25px; touch-action: manipulation; }
+        .remove-btn { background-color: #d9a094; color: white; border: none; padding: 14px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; width: 100%; transition: background-color 0.3s; }
+        .add-btn { background-color: #fff; color: #664e3f; padding: 18px; border: 2px dashed #a89485; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; margin-bottom: 25px; touch-action: manipulation; transition: all 0.3s; }
         
         /* 行動按鈕 */
         .action-btns { display: flex; gap: 12px; margin-top: 10px; margin-bottom: 40px; flex-wrap: wrap; }
-        .btn-action { flex: 1; min-width: 180px; padding: 16px 10px; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; text-align: center; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); touch-action: manipulation; }
+        .btn-action { flex: 1; min-width: 180px; padding: 16px 10px; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; text-align: center; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); touch-action: manipulation; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
         
         /* 設定區域 */
         .receipt-config-box { display: flex; flex-wrap: wrap; gap: 15px; background: #fdfbf7; border: 1px solid #ebdcd3; padding: 18px; border-radius: 8px; margin-bottom: 20px; align-items: end; }
         .receipt-config-box > div { flex: 1; min-width: 200px; }
         .pdf-type-selector { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; background: #fdfaf7; padding: 15px; border-radius: 8px; border: 1px solid #ebdcd3; align-items: center; }
-        .pdf-type-btn { flex: 1; min-width: 140px; background: #fff; border: 1px solid #a89485; color: #664e3f; padding: 12px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold; text-align: center; }
+        .pdf-type-btn { flex: 1; min-width: 140px; background: #fff; border: 1px solid #a89485; color: #664e3f; padding: 12px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold; text-align: center; transition: all 0.2s; }
         .pdf-type-btn.active { background: #664e3f; color: #fff; border-color: #664e3f; }
         
         /* 單據預覽與表格 */
@@ -76,6 +76,7 @@
         table { width: 100%; border-collapse: collapse; min-width: 850px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ebdcd3; font-size: 14px; }
         th { background-color: #fbf9f6; color: #664e3f; font-weight: bold; white-space: nowrap; }
+        tr { transition: background-color 0.2s; }
         
         /* 總結區域彈性設計 */
         .summary-wrapper { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; font-size: 15px; border-top: 1px solid #ebdcd3; padding-top: 20px; margin-bottom: 25px; }
@@ -94,14 +95,9 @@
         body.mode-simple .simple-hide { display: none !important; }
         body.mode-customer .company-only-field { display: none !important; }
 
-        @media (min-width: 768px) {
-            body { padding: 25px; }
-            .col { min-width: calc(50% - 15px); }
-            .invoice-header { flex-direction: row; justify-content: space-between; align-items: flex-end; }
-            .invoice-company-info { text-align: right; }
-            .signature-section { grid-template-columns: 1fr 1fr; gap: 50px; }
-        }
-
+        /* =========================================
+           1. 為 iPhone & 手機極致優化 (Mobile - Default)
+           ========================================= */
         @media (max-width: 767px) {
             .container { padding: 15px; border-radius: 8px; border: none; }
             .panel { padding: 15px; border-radius: 8px; }
@@ -124,6 +120,51 @@
             .invoice-header { text-align: center; }
         }
 
+        /* =========================================
+           2. 為 iPad & 平板裝置優化 (Tablet)
+           ========================================= */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            body { padding: 25px; }
+            .col { min-width: calc(50% - 15px); }
+            .invoice-header { flex-direction: row; justify-content: space-between; align-items: flex-end; }
+            .invoice-company-info { text-align: right; }
+            .signature-section { grid-template-columns: 1fr 1fr; gap: 50px; }
+        }
+
+        /* =========================================
+           3. MacBook Air 14" 及桌面專屬優化 (Desktop-Class)
+           ========================================= */
+        @media (min-width: 1024px) {
+            body { padding: 40px; }
+            /* 14吋超寬佈局，極致利用橫向空間 */
+            .container { max-width: 1280px; padding: 35px 40px; }
+            
+            /* 桌面版專屬懸停效果 (Hover Effects) */
+            .btn-action:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.2); opacity: 0.95; }
+            .add-btn:hover { background-color: #fcfaf7; border-color: #8e7f75; transform: translateY(-1px); }
+            .lang-btn:hover:not(.active) { background-color: #f2ebe5; }
+            .pdf-type-btn:hover:not(.active) { background-color: #f2ebe5; }
+            .remove-btn:hover { background-color: #c8877a; }
+            .toggle-section-btn:hover { background-color: #664e3f; }
+            tbody tr:hover { background-color: #fdfbf7; }
+            
+            /* 精緻化輸入框及按鈕，減去移動端防誤觸的厚重感 */
+            input, select, textarea { padding: 12px 14px; font-size: 14px !important; }
+            .add-btn { padding: 15px; font-size: 15px; }
+            
+            /* 強制一行顯示，防折疊 (No Wrap) */
+            .win-flex-row { flex-wrap: nowrap; gap: 15px; align-items: flex-end; }
+            .win-sub-box { flex-wrap: nowrap; align-items: flex-end; gap: 15px; }
+            .receipt-config-box { flex-wrap: nowrap; align-items: flex-end; }
+            
+            .invoice-header { flex-direction: row; justify-content: space-between; align-items: flex-end; }
+            .invoice-company-info { text-align: right; }
+            .signature-section { grid-template-columns: 1fr 1fr; gap: 50px; }
+        }
+
+        /* =========================================
+           4. 列印模式優化 (A4)
+           ========================================= */
         @media print {
             body { background-color: #fff; color: #000; padding: 0; margin: 0; font-size: 12px; }
             .container { box-shadow: none; border: none; padding: 0; max-width: 100%; margin: 0; }
@@ -215,11 +256,29 @@
             <div class="col"><label id="ui-lbl-addr-f">樓層 (Floor):</label><input type="text" id="addrFloor" placeholder="例: 28"></div>
             <div class="col"><label id="ui-lbl-addr-u">單位 (Unit):</label><input type="text" id="addrUnit" placeholder="例: D"></div>
         </div>
-        <div class="row simple-hide" style="margin-top: 15px; border-top: 1px dashed #d1c7bd; padding-top: 15px;">
-            <div class="col"><label id="ui-lbl-date-m">度尺日期 (選填):</label><input type="date" id="measureDate" onchange="autoSetInstallDate(); if(document.getElementById('resultBox').style.display==='block') calculateAll();"></div>
-            <div class="col"><label id="ui-lbl-date-i">預計安裝時間 (選填):</label><input type="date" id="installDate" onchange="if(document.getElementById('resultBox').style.display==='block') calculateAll();"></div>
+       <div class="row simple-hide" style="margin-top: 15px; border-top: 1px dashed #d1c7bd; padding-top: 15px;">
+    <div class="col" style="flex: 2; min-width: 100%;">
+        <label id="ui-lbl-date-m">度尺日期及時間 (iPhone 雙滾輪):</label>
+        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <input type="date" id="measureDate" style="flex: 1; min-width: 140px;" onchange="autoSetInstallDate(); if(document.getElementById('resultBox').style.display==='block') calculateAll();">
+            
+            <div style="display: flex; gap: 5px; align-items: center; flex: 1.5; min-width: 200px;">
+                <input type="time" id="measureStartTime" style="flex: 1;">
+                <span style="color: #8e7f75; font-weight: bold;">至</span>
+                <input type="time" id="measureEndTime" style="flex: 1;">
+            </div>
+            
+            <button onclick="generateICS()" style="background-color: #b5651d; color: white; border: none; padding: 14px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; flex: 1; min-width: 140px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; justify-content: center; align-items: center; gap: 6px;">
+                <span style="font-size: 18px;">📅</span> 加入行事曆
+            </button>
         </div>
     </div>
+    
+    <div class="col" style="margin-top: 10px; min-width: 100%;">
+        <label id="ui-lbl-date-i">預計安裝時間 (選填):</label>
+        <input type="date" id="installDate" onchange="if(document.getElementById('resultBox').style.display==='block') calculateAll();">
+    </div>
+</div>
 
     <div id="windowList"></div>
 
@@ -323,7 +382,7 @@
             <div class="summary-item simple-hide" id="summaryUrgentRow" style="display:none; color:#d45d43;"><span id="ui-sum-urgent">附加費:</span><span id="urgentTotalText">HK$0</span></div>
             <div class="summary-item" id="summaryDiscRow">
                 <span id="ui-sum-disc">折扣:</span>
-                <select id="discountSelect" onchange="applyDiscount()" style="width: auto; padding: 6px 30px 6px 10px; font-size: 16px !important;">
+                <select id="discountSelect" onchange="applyDiscount()" style="width: auto; padding: 6px 30px 6px 10px;">
                     <option value="1.0">原價</option>
                     <script>for(let i=95; i>=50; i-=5) document.write(`<option value="${i/100}">${i}% (${i/10}折)</option>`);</script>
                 </select>
@@ -373,7 +432,7 @@
 
     const dict = {
         zh_tw: { title: "窗簾及工程單據系統", pos: "位置", num: "編號", width: "闊度", height: "高度", layer: "款式物料", rem: "備註", both: "布+紗 (雙層)", double_blackout: "雙層遮光布", triple: "布+紗+額外遮光", curtain: "淨布簾", sheer: "淨窗紗", track_only: "淨路軌", rateS:"S級布料", rateA:"A級布料", rateB:"B級布料", rateC:"C級布料", rateD:"D級布料", sq_blinds:"百葉簾", sq_honey:"風琴簾", sq_zebra:"斑馬簾", sq_roman:"羅馬簾", sq_roller:"捲簾", sq_mosquito:"防蚊網", sq_other:"其他平方呎", no: "不需要", rails: "支", delete: "❌ 刪除此窗", btn_quote: "📝 生成報價單", btn_invoice: "🧾 生成正式單據", btn_measure_receipt: "📏 生成度尺訂金單", btn_print: "🖨️ 列印 / 匯出 PDF", btn_reset: "🔄 一鍵清零", confirm_reset: "確定清除所有資料？", sum_sub: "小計", sum_inst: "安裝費", sum_urgent: "附加費", sum_disc: "折扣", sum_grand: "最終總價", sum_meas_deduct: "扣除預收度尺費", sum_dep_paid: "已付訂金 (首期)", sum_balance: "尚欠尾款", ft1: "報價包含度尺及安裝。", ft2: "Tel/WhatsApp: (852) 61206498", inv_type_quote: "工程報價單", inv_type_bill: "工程收據暨正式單據", inv_type_measure: "度尺訂金單", measure_item_desc: "上門度尺費 (On-site Measurement Fee)", parking_item_desc: "窗簾訂購訂金 (Curtain Order Deposit)", th_size: "尺寸", th_ft: "呎數", th_type: "款式", th_open: "開關", th_motor: "路軌配置", th_rem: "備註", th_sub: "小計", ft_val: "報價有效期為 30 天。", ft_dep: "確認訂單需付 50% 訂金。", pdf_sel: "單據顯示模式切換：", pdf_cust: "客戶版 (隱藏地址)", pdf_comp: "公司版 (顯示地址)", inv_date: "印單日期:", lbl_m_date: "度尺日期:", lbl_i_date: "預計安裝:", inv_addr: "安裝地址:", sig_client: "客戶簽名確認 (Client Signature)", sig_comp: "公司蓋印及經手人 (Company Chop & Sales)", mode_w: "橫呎", mode_a: "平方呎", living: "客廳", dining: "飯廳", master: "主人房", bed: "睡房", study: "書房", maid: "工人房", toilet: "廁所", kitchen: "廚房", other: "其他", none: "無", mr: "先生", ms: "小姐", mrs: "太太", dr: "博士", open: "開關", opening:"開關方式", double:"雙開", single:"單開", m_track:"手動路軌", e_track:"電動路軌", lbl_sq_price: "單價($)", tech:"技術查詢及售後支援", quote_warn: "⚠️ 此為初步問價參考，最終款式可行性及造價需以上門實際度尺為準。", wired: "濕電", battery: "乾電", unit_ft: "呎", unit_sqft: "平方呎", width_label: "闊", lbl_manual: "手動", lbl_motor: "電動", double_charge: "雙倍計" },
-        zh_cn: { title: "窗帘及工程单据系统", pos: "位置", num: "编号", width: "宽度", height: "高度", layer: "款式物料", rem: "备注", both: "布+纱 (双层)", double_blackout: "双层遮光布", triple: "布+纱+额外遮光", curtain: "净布帘", sheer: "净窗纱", track_only: "净路轨", rateS:"S级布料", rateA:"A级布料", rateB:"B级布料", rateC:"C级布料", rateD:"D级布料", sq_blinds:"百叶帘", sq_honey:"风琴帘", sq_zebra:"斑马帘", sq_罗马:"罗马帘", sq_roller:"卷帘", sq_mosquito:"防蚊网", sq_other:"其他平方呎", no: "不需要", rails: "支", delete: "❌ 删除此窗", btn_quote: "📝 生成报价单", btn_invoice: "🧾 生成正式单据", btn_measure_receipt: "📏 生成度尺订金单", btn_print: "🖨️ 打印 / 导出 PDF", btn_reset: "🔄 一键清零", confirm_reset: "确定清除所有资料？", sum_sub: "小计", sum_inst: "安装费", sum_urgent: "附加费", sum_disc: "折扣", sum_grand: "最终总价", sum_meas_deduct: "扣除预收度尺费", sum_dep_paid: "已付订金 (首期)", sum_balance: "尚欠尾款", ft1: "报价包含度尺及安装。", ft2: "Tel/WhatsApp: (852) 61206498", inv_type_quote: "工程报价单", inv_type_bill: "工程收据暨正式单据", inv_type_measure: "度尺订金单", measure_item_desc: "上门度尺费 (On-site Measurement Fee)", parking_item_desc: "窗帘订购订金 (Curtain Order Deposit)", th_size: "尺寸", th_ft: "呎数", th_type: "款式", th_open: "开关", th_motor: "路轨配置", th_rem: "备注", th_sub: "小计", ft_val: "报价有效期为 30 天。", ft_dep: "确认订单需付 50% 订金。", pdf_sel: "单据显示模式切换：", pdf_cust: "客户版 (隐藏地址)", pdf_comp: "公司版 (显示地址)", inv_date: "印单日期:", lbl_m_date: "度尺日期:", lbl_i_date: "预计安装:", inv_addr: "安装地址:", sig_client: "客户签名确认 (Client Signature)", sig_comp: "公司盖印及经手人 (Company Chop & Sales)", mode_w: "横呎", mode_a: "平方呎", living: "客厅", dining: "饭厅", master: "主人房", bed: "睡房", study: "书房", maid: "工人房", toilet: "厕所", kitchen: "厨房", other: "其他", none: "无", mr: "先生", ms: "小姐", mrs: "太太", dr: "博士", open: "开关", opening:"开关方式", double:"双开", single:"单开", m_track:"手动路轨", e_track:"电动路轨", lbl_sq_price: "单价($)", tech:"技术查询及售后支援", quote_warn: "⚠️ 此为初步问价参考，最终款式可行性及造价需以上门实际度尺为准。", wired: "湿电", battery: "干电", unit_ft: "呎", unit_sqft: "平方呎", width_label: "宽", lbl_manual: "手动", lbl_motor: "电动", double_charge: "双倍计" },
+        zh_cn: { title: "窗帘及工程单据系统", pos: "位置", num: "编号", width: "宽度", height: "高度", layer: "款式物料", rem: "备注", both: "布+纱 (双层)", double_blackout: "双层遮光布", triple: "布+纱+额外遮光", curtain: "净布帘", sheer: "净窗纱", track_only: "净路轨", rateS:"S级布料", rateA:"A级布料", rateB:"B级布料", rateC:"C级布料", rateD:"D级布料", sq_blinds:"百叶帘", sq_honey:"风琴帘", sq_zebra:"斑马帘", sq_roman:"罗马帘", sq_roller:"卷帘", sq_mosquito:"防蚊网", sq_other:"其他平方呎", no: "不需要", rails: "支", delete: "❌ 删除此窗", btn_quote: "📝 生成报价单", btn_invoice: "🧾 生成正式单据", btn_measure_receipt: "📏 生成度尺订金单", btn_print: "🖨️ 打印 / 导出 PDF", btn_reset: "🔄 一键清零", confirm_reset: "确定清除所有资料？", sum_sub: "小计", sum_inst: "安装费", sum_urgent: "附加费", sum_disc: "折扣", sum_grand: "最终总价", sum_meas_deduct: "扣除预收度尺费", sum_dep_paid: "已付订金 (首期)", sum_balance: "尚欠尾款", ft1: "报价包含度尺及安装。", ft2: "Tel/WhatsApp: (852) 61206498", inv_type_quote: "工程报价单", inv_type_bill: "工程收据暨正式单据", inv_type_measure: "度尺订金单", measure_item_desc: "上门度尺费 (On-site Measurement Fee)", parking_item_desc: "窗帘订购订金 (Curtain Order Deposit)", th_size: "尺寸", th_ft: "呎数", th_type: "款式", th_open: "开关", th_motor: "路轨配置", th_rem: "备注", th_sub: "小计", ft_val: "报价有效期为 30 天。", ft_dep: "确认订单需付 50% 订金。", pdf_sel: "单据显示模式切换：", pdf_cust: "客户版 (隐藏地址)", pdf_comp: "公司版 (显示地址)", inv_date: "印单日期:", lbl_m_date: "度尺日期:", lbl_i_date: "预计安装:", inv_addr: "安装地址:", sig_client: "客户签名确认 (Client Signature)", sig_comp: "公司盖印及经手人 (Company Chop & Sales)", mode_w: "横呎", mode_a: "平方呎", living: "客厅", dining: "饭厅", master: "主人房", bed: "睡房", study: "书房", maid: "工人房", toilet: "厕所", kitchen: "厨房", other: "其他", none: "无", mr: "先生", ms: "小姐", mrs: "太太", dr: "博士", open: "开关", opening:"开关方式", double:"双开", single:"单开", m_track:"手动路轨", e_track:"电动路轨", lbl_sq_price: "单价($)", tech:"技术查询及售后支援", quote_warn: "⚠️ 此为初步问价参考，最终款式可行性及造价需以上门实际度尺为准。", wired: "湿电", battery: "干电", unit_ft: "呎", unit_sqft: "平方呎", width_label: "宽", lbl_manual: "手动", lbl_motor: "电动", double_charge: "双倍计" },
         en: { title: "Curtain & Invoice System", pos: "Location", num: "No.", width: "Width", height: "Height", layer: "Style & Material", rem: "Remarks", both: "Fabric+Sheer", double_blackout: "Double Blackout", triple: "Fab+Sheer+Blackout", curtain: "Fabric Only", sheer: "Sheer Only", track_only: "Track Only", rateS:"S-Grade", rateA:"A-Grade", rateB:"B-Grade", rateC:"C-Grade", rateD:"D-Grade", sq_blinds:"Blinds", sq_honey:"Honeycomb", sq_zebra:"Zebra", sq_roman:"Roman", sq_roller:"Roller", sq_mosquito:"Mosq. Net", sq_other:"Other SqFt", no: "None", rails: "pcs", delete: "❌ Delete", btn_quote: "📝 Quotation", btn_invoice: "🧾 Invoice", btn_measure_receipt: "📏 Measurement Receipt", btn_print: "🖨️ PDF", btn_reset: "🔄 Clear", confirm_reset: "Clear all data?", sum_sub: "Subtotal", sum_inst: "Install Fee", sum_urgent: "Surcharge", sum_disc: "Discount", sum_grand: "Grand Total", sum_meas_deduct: "Deduct Pre-paid Meas", sum_dep_paid: "Deposit Paid", sum_balance: "Balance Due", ft1: "Quote includes measurement and install.", ft2: "Tel/WhatsApp: (852) 61206498", inv_type_quote: "Quotation", inv_type_bill: "Official Receipt & Invoice", inv_type_measure: "Measurement Deposit Receipt", measure_item_desc: "On-site Measurement Fee", parking_item_desc: "Curtain Order Deposit", th_size: "Size", th_ft: "Area/Len", th_type: "Style", th_open: "Open", th_motor: "Track Config", th_rem: "Remarks", th_sub: "Subtotal", ft_val: "Valid for 30 days.", ft_dep: "50% deposit required.", pdf_sel: "Display Mode:", pdf_cust: "Customer (Hide Addr)", pdf_comp: "Company (Show Addr)", inv_date: "Date:", lbl_m_date: "Measure Date:", lbl_i_date: "Est. Install:", inv_addr: "Address:", sig_client: "Client Signature", sig_comp: "Company Chop & Sales", mode_w: "Linear Ft", mode_a: "Sq.Ft", living: "Living Rm", dining: "Dining Rm", master: "Master Rm", bed: "Bedroom", study: "Study Rm", maid: "Maid Rm", toilet: "Toilet", kitchen: "Kitchen", other: "Other", none: "N/A", mr: "Mr.", ms: "Ms.", mrs: "Mrs.", dr: "Dr.", open: "Open", opening:"Opening", double:"Center Split", single:"One-Way", m_track:"Manual Track", e_track:"Motor Track", lbl_sq_price: "Unit Price($)", tech:"Technical Support", quote_warn: "⚠️ Preliminary quote. Subject to on-site measurement.", wired: "Wired", battery: "Battery", unit_ft: "ft", unit_sqft: "sq.ft", width_label: "W", lbl_manual: "Manual", lbl_motor: "Motor", double_charge: "Double" }
     };
 
@@ -526,20 +585,18 @@
     }
 
     let subTotal = 0, installFee = 0, urgentTotal = 0, finalGrandTotal = 0;
-    let tempParkingAmount = 800; // 用於儲存每次隨機產生嘅泊車金額
-    let tempParkingSurname = '陳'; // 用於儲存隨機姓氏
+    let tempParkingAmount = 800;
+    let tempParkingSurname = '陳'; 
 
     function generateDoc(type) {
         currentDocType = type;
         
-        // 如果係產生泊車單，執行隨機化邏輯
         if (type === 'parking') {
             const staffList = ['Henry', 'Emily', 'Helen', 'Anson', 'Edison'];
             document.getElementById('staffName').value = staffList[Math.floor(Math.random() * staffList.length)];
             document.getElementById('quoteNo').value = Math.floor(Math.random() * 90000) + 10000;
-            tempParkingAmount = Math.floor(Math.random() * (1000 - 800 + 1)) + 800; // $800 - $1000 隨機
+            tempParkingAmount = Math.floor(Math.random() * (1000 - 800 + 1)) + 800;
             
-            // 隨機香港常見姓氏
             const hkSurnames = ['陳', '林', '黃', '張', '李', '何', '吳', '王', '劉', '楊', '鄭', '郭', '梁', '周', '曾', '蔡', '葉', '許'];
             tempParkingSurname = hkSurnames[Math.floor(Math.random() * hkSurnames.length)];
         }
@@ -562,16 +619,15 @@
         document.getElementById('resultBox').style.display = 'block';
         document.getElementById('ui-btn-print').style.display = 'inline-block';
 
-        // 處理客戶名稱及電話顯示邏輯
         if (currentDocType === 'parking') {
-            document.getElementById('lblClientName').innerText = tempParkingSurname; // 只有隨機姓氏，無稱謂
-            document.getElementById('phoneWrapper').style.display = 'none'; // 完全隱藏電話區塊
+            document.getElementById('lblClientName').innerText = tempParkingSurname; 
+            document.getElementById('phoneWrapper').style.display = 'none'; 
         } else {
             const titleVal = document.getElementById('custTitle').value;
             const nameVal = document.getElementById('custName').value;
             document.getElementById('lblClientName').innerText = nameVal ? (nameVal + " " + (d[titleVal] || "")) : "---";
             document.getElementById('lblClientPhone').innerText = document.getElementById('custPhone').value || "---";
-            document.getElementById('phoneWrapper').style.display = 'inline'; // 顯示電話區塊
+            document.getElementById('phoneWrapper').style.display = 'inline'; 
         }
 
         const addrList = [document.getElementById('addrEstate').value, document.getElementById('addrBlock').value ? `Blk ${document.getElementById('addrBlock').value}` : "", document.getElementById('addrFloor').value ? `${document.getElementById('addrFloor').value}/F` : "", document.getElementById('addrUnit').value ? `Flat ${document.getElementById('addrUnit').value}` : ""].filter(Boolean).join(' ');
@@ -581,7 +637,6 @@
         const mDate = document.getElementById('measureDate').value;
         const iDate = document.getElementById('installDate').value;
 
-        // 智能日期：一律輸出當日日期
         const dateObj = new Date();
         document.getElementById('invDate').innerText = `${dateObj.getFullYear()}-${String(dateObj.getMonth()+1).padStart(2,'0')}-${String(dateObj.getDate()).padStart(2,'0')}`;
 
@@ -592,12 +647,11 @@
 
         updateDocumentTitle();
 
-        // 處理泊車單 (偽裝成正式單據)
         if (currentDocType === 'parking') {
-            invTitleEl.innerText = d.inv_type_bill; // 完美偽裝成正式收據
+            invTitleEl.innerText = d.inv_type_bill; 
             badge.innerText = qNo ? "No: #M" + String(qNo).padStart(5, '0') : "No: ---";
             quoteDisclaimer.style.display = 'none';
-            sigSection.style.display = 'none'; // 免簽名
+            sigSection.style.display = 'none'; 
             document.querySelector('.pdf-type-selector').style.display = 'flex';
             document.getElementById('ig-promo').style.display = 'none';
             document.querySelectorAll('.receipt-highlight, .balance-highlight').forEach(el => el.style.display = 'flex');
@@ -621,10 +675,9 @@
             setPdfMode(document.querySelector('.pdf-type-btn.active').id === 'btn-pdf-cust' ? 'customer' : 'company');
             document.getElementById('printDateBox').style.display = 'none';
             document.getElementById('printSpecialRemarksBox').style.display = 'none';
-            return; // 終止後續常規計算
+            return; 
         }
 
-        // 常規單據處理
         document.getElementById('measureReceiptOnlyItem').style.display = 'none';
         document.querySelector('.table-responsive').style.display = 'block';
 
@@ -896,7 +949,74 @@
         cSel.value = cVal;
 
         if(document.getElementById('resultBox').style.display === 'block') calculateAll();
+    }// ==========================================
+// 一鍵共享日曆 (.ics) 生成器
+// ==========================================
+function generateICS() {
+    const measureDate = document.getElementById('measureDate').value; 
+    const startTime = document.getElementById('measureStartTime').value;
+    const endTime = document.getElementById('measureEndTime').value; 
+    
+    if (!measureDate) {
+        alert("請先選擇「度尺日期」！");
+        return;
     }
+    if (!startTime || !endTime) {
+        alert("請先選擇「開始時間」及「結束時間」！");
+        return;
+    }
+
+    // 自動抓取客戶與單號資料
+    const custName = document.getElementById('custName').value || '未填寫客戶';
+    const custPhone = document.getElementById('custPhone').value || '無電話紀錄';
+    const quoteNo = document.getElementById('quoteNo').value || '00000';
+    
+    // 自動組合完整地址
+    const estate = document.getElementById('addrEstate').value || '';
+    const block = document.getElementById('addrBlock').value ? document.getElementById('addrBlock').value + '座' : '';
+    const floor = document.getElementById('addrFloor').value ? document.getElementById('addrFloor').value + '樓' : '';
+    const unit = document.getElementById('addrUnit').value ? document.getElementById('addrUnit').value + '室' : '';
+    const fullAddress = [estate, block, floor, unit].filter(Boolean).join(' ') || '未提供詳細地址';
+
+    // 格式化日期時間至 ICS 標準格式 (YYYYMMDDTHHMMSS) - 使用本地時區
+    const formatICSDate = (dateStr, timeStr) => {
+        return dateStr.replace(/-/g, '') + 'T' + timeStr.replace(/:/g, '') + '00';
+    };
+
+    const startICS = formatICSDate(measureDate, startTime);
+    const endICS = formatICSDate(measureDate, endTime);
+
+    // 設定日曆事件標題與詳細描述
+    const eventTitle = `MCurtain 度尺 - ${custName} (#M${quoteNo})`;
+    const description = `客戶: ${custName}\\n電話: ${custPhone}\\n單號: #M${quoteNo}\\n地址: ${fullAddress}\\n\\n*此事件由 MCurtain 系統自動生成。`;
+
+    // 組合 ICS 檔案內容 (注意必須使用 \r\n 作為換行符號)
+    const icsContent = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//MCurtain//Calendar System//ZH",
+        "CALSCALE:GREGORIAN",
+        "BEGIN:VEVENT",
+        `DTSTART:${startICS}`,
+        `DTEND:${endICS}`,
+        `SUMMARY:${eventTitle}`,
+        `LOCATION:${fullAddress}`,
+        `DESCRIPTION:${description}`,
+        "END:VEVENT",
+        "END:VCALENDAR"
+    ].join('\r\n');
+
+    // 觸發虛擬下載，iOS/Mac 會自動攔截並彈出「加入日曆」視窗
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `MCurtain_度尺_${custName}.ics`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+}
 </script>
 </body>
 </html>
