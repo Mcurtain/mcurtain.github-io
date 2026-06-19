@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
+<link rel="apple-touch-icon" href="logo.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>MCurtain 窗簾及工程單據系統 v19 (Universal / Mac Optimized)</title>
@@ -256,20 +257,31 @@
             <div class="col"><label id="ui-lbl-addr-f">樓層 (Floor):</label><input type="text" id="addrFloor" placeholder="例: 28"></div>
             <div class="col"><label id="ui-lbl-addr-u">單位 (Unit):</label><input type="text" id="addrUnit" placeholder="例: D"></div>
         </div>
-       <div class="row simple-hide" style="margin-top: 15px; border-top: 1px dashed #d1c7bd; padding-top: 15px;">
+      <div class="row simple-hide" style="margin-top: 15px; border-top: 1px dashed #d1c7bd; padding-top: 15px;">
     <div class="col" style="flex: 2; min-width: 100%;">
-        <label id="ui-lbl-date-m">度尺日期及時間 (iPhone 雙滾輪):</label>
-        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-            <input type="date" id="measureDate" style="flex: 1; min-width: 140px;" onchange="autoSetInstallDate(); if(document.getElementById('resultBox').style.display==='block') calculateAll();">
+        <label id="ui-lbl-date-m">度尺日期及時間:</label>
+        
+        <div style="display: flex; gap: 8px; align-items: flex-end; flex-wrap: wrap;">
             
-            <div style="display: flex; gap: 5px; align-items: center; flex: 1.5; min-width: 200px;">
-                <input type="time" id="measureStartTime" style="flex: 1;">
-                <span style="color: #8e7f75; font-weight: bold;">至</span>
-                <input type="time" id="measureEndTime" style="flex: 1;">
+            <div style="display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 140px;">
+                <span style="font-size: 11px; color: #a09287; padding-left: 2px;">(例: 2026-06-20)</span>
+                <input type="date" id="measureDate" style="width: 100%;" onchange="autoSetInstallDate(); if(document.getElementById('resultBox').style.display==='block') calculateAll();">
             </div>
             
-            <button onclick="generateICS()" style="background-color: #b5651d; color: white; border: none; padding: 14px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; flex: 1; min-width: 140px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; justify-content: center; align-items: center; gap: 6px;">
-                <span style="font-size: 18px;">📅</span> 加入行事曆
+            <div style="display: flex; flex-direction: column; gap: 2px; flex: 1.5; min-width: 200px;">
+                <div style="display: flex; justify-content: space-between; padding: 0 4px;">
+                    <span style="font-size: 11px; color: #a09287;">(例: 14:00)</span>
+                    <span style="font-size: 11px; color: #a09287;">(例: 16:00)</span>
+                </div>
+                <div style="display: flex; gap: 5px; align-items: center;">
+                    <input type="time" id="measureStartTime" style="flex: 1; width: 100%;">
+                    <span style="color: #8e7f75; font-weight: bold;">至</span>
+                    <input type="time" id="measureEndTime" style="flex: 1; width: 100%;">
+                </div>
+            </div>
+            
+            <button onclick="generateICS()" style="background-color: #b5651d; color: white; border: none; padding: 12px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; flex: 1; min-width: 140px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; justify-content: center; align-items: center; gap: 6px; height: 40px; margin-bottom: 2px;">
+                <span>📅</span> 加入行事曆
             </button>
         </div>
     </div>
