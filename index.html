@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="theme-color" content="#4a3326">
-    <title>MCurtain 窗簾工程系統 v22</title>
+    <title>MCurtain 窗簾工程系統 v25</title>
     <style>
         /* ===== 全局變量與重置 ===== */
         :root {
@@ -21,8 +21,8 @@
             --brand: #513c2f;
             --brand-2: #7a5b45;
             --brand-soft: #f5ebe2;
-            --shadow: 0 14px 30px rgba(63, 46, 35, 0.08);
-            --shadow-strong: 0 18px 40px rgba(63, 46, 35, 0.14);
+            --shadow: 0 8px 24px rgba(63, 46, 35, 0.08);
+            --shadow-strong: 0 16px 40px rgba(63, 46, 35, 0.14);
             --radius: 14px;
             --radius-sm: 8px;
             --transition: 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -38,7 +38,7 @@
             font-family: 'Avenir Next', 'Segoe UI', 'Helvetica Neue', 'PingFang HK', 'Noto Sans HK', Arial, sans-serif;
             background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.96) 0, rgba(255, 255, 255, 0.86) 28%, rgba(255, 255, 255, 0) 58%),
                 linear-gradient(180deg, #f7f1e9 0%, #f4ece3 50%, #efe4d7 100%);
-            padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+            padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
             color: var(--text);
             margin: 0;
             line-height: 1.45;
@@ -56,7 +56,7 @@
         .container {
             background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(8px);
-            padding: 20px 22px 28px;
+            padding: 16px 18px 24px;
             border-radius: 24px;
             box-shadow: var(--shadow-strong);
             margin: 0 auto;
@@ -64,7 +64,7 @@
             max-width: 1200px;
         }
 
-        /* ===== 頂部控制欄 ===== */
+        /* ===== 頂部控制欄（無固定定位） ===== */
         .top-ctrl {
             display: flex;
             justify-content: space-between;
@@ -214,6 +214,32 @@
             border-color: var(--brand);
         }
 
+        /* ===== 快捷鍵提示條 ===== */
+        .shortcut-hint-bar {
+            background: rgba(255, 248, 240, 0.9);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 4px 14px;
+            font-size: 11px;
+            color: var(--text-muted);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            box-shadow: var(--shadow);
+        }
+        .shortcut-hint-bar kbd {
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 0 6px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--brand);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
         /* ===== 單位換算器面板 ===== */
         .converter-panel {
             background: rgba(255, 252, 248, 0.96);
@@ -294,7 +320,7 @@
         }
         .conv-results {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(6, 1fr);
             gap: 6px;
             margin-top: 10px;
             padding-top: 10px;
@@ -337,7 +363,6 @@
             text-align: center;
             padding: 6px 0;
         }
-        /* 矩形繪圖區 */
         .rect-canvas-wrap {
             margin-top: 12px;
             text-align: center;
@@ -362,7 +387,7 @@
         /* ===== 商戶總覽 ===== */
         .merchant-dashboard {
             display: grid;
-            grid-template-columns: 1.5fr repeat(4, 1fr);
+            grid-template-columns: 1.5fr repeat(5, 1fr);
             gap: 10px;
             margin-bottom: 14px;
         }
@@ -399,7 +424,7 @@
             grid-column: span 1;
         }
 
-        /* ===== 平台快捷 ===== */
+        /* ===== 平台快捷操作（無固定定位） ===== */
         .platform-action-bar {
             margin-bottom: 14px;
             border: 1px solid var(--border);
@@ -676,6 +701,23 @@
             margin-bottom: 18px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
             transition: box-shadow 0.3s;
+            position: relative;
+        }
+        .window-item .drag-handle {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            cursor: grab;
+            font-size: 18px;
+            color: #ccc;
+            user-select: none;
+        }
+        .window-item .drag-handle:hover {
+            color: var(--brand);
+        }
+        .window-item.dragging {
+            opacity: 0.5;
+            border-style: dashed;
         }
         .win-flex-row {
             display: flex;
@@ -738,7 +780,7 @@
             border-color: #6f5b4c;
         }
 
-        /* ===== 操作按鈕 ===== */
+        /* ===== 操作按鈕（無固定定位） ===== */
         .action-btns {
             display: flex;
             gap: 10px;
@@ -1086,6 +1128,36 @@
             bottom: 2px;
             left: 2px;
         }
+        /* 客戶下拉建議 */
+        .customer-suggest {
+            position: relative;
+        }
+        .customer-suggest .suggest-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+            z-index: 10;
+            box-shadow: var(--shadow);
+        }
+        .customer-suggest .suggest-list.active {
+            display: block;
+        }
+        .customer-suggest .suggest-list div {
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 13px;
+            border-bottom: 1px solid #f0ebe5;
+        }
+        .customer-suggest .suggest-list div:hover {
+            background: var(--brand-soft);
+        }
 
         /* ===== 歷史/同步/模板 共用 ===== */
         .history-bar,
@@ -1325,7 +1397,8 @@
             .top-settings-bar,
             .window-photo-box,
             .window-live-box,
-            .converter-panel {
+            .converter-panel,
+            .shortcut-hint-bar {
                 display: none !important;
             }
             .result-box {
@@ -1457,10 +1530,7 @@
                 padding: 10px;
                 text-align: center;
                 gap: 10px;
-                position: sticky;
-                top: calc(env(safe-area-inset-top) + 2px);
-                z-index: 30;
-                background: rgba(242, 235, 229, 0.98);
+                /* 無 position: sticky，自然滾動 */
             }
             .mode-toggle-container,
             .lang-group {
@@ -1474,10 +1544,8 @@
                 padding: 5px 8px;
             }
             .platform-action-bar {
-                position: sticky;
-                top: calc(env(safe-area-inset-top) + 72px);
-                z-index: 28;
                 padding: 8px;
+                /* 無 position: sticky */
             }
             .platform-meta {
                 min-width: 100%;
@@ -1557,13 +1625,11 @@
                 flex-direction: column;
                 gap: 8px;
                 margin-bottom: 16px;
-                position: sticky;
-                bottom: calc(env(safe-area-inset-bottom) + 6px);
-                z-index: 25;
                 background: rgba(255, 245, 234, 0.98);
                 border: 1px solid #d9bda7;
                 border-radius: 12px;
                 padding: 8px;
+                /* 無 position: sticky，自然滾動 */
             }
             .btn-action {
                 width: 100%;
@@ -1652,13 +1718,22 @@
             .conv-area-inputs .conv-row {
                 width: 100%;
             }
+            .shortcut-hint-bar {
+                font-size: 10px;
+                padding: 2px 10px;
+                gap: 6px;
+                flex-wrap: wrap;
+            }
+            .shortcut-hint-bar span {
+                display: inline;
+            }
         }
         @media (min-width: 768px) and (max-width: 1023px) {
             body {
                 padding: 16px;
             }
             .merchant-dashboard {
-                grid-template-columns: 1.3fr 1fr 1fr;
+                grid-template-columns: 1.3fr 1fr 1fr 1fr;
             }
             .dashboard-card.primary {
                 grid-column: 1 / -1;
@@ -1685,9 +1760,6 @@
                 gap: 40px;
             }
             .action-btns {
-                position: sticky;
-                bottom: calc(env(safe-area-inset-bottom) + 6px);
-                z-index: 20;
                 background: rgba(255, 245, 234, 0.98);
                 border: 1px solid #d9bda7;
                 border-radius: 12px;
@@ -1771,6 +1843,10 @@
             .converter-grid {
                 grid-template-columns: 1fr 1fr;
             }
+            .shortcut-hint-bar {
+                font-size: 12px;
+                padding: 4px 18px;
+            }
         }
         @media (prefers-reduced-motion: reduce) {
             * {
@@ -1811,6 +1887,17 @@
         </div>
     </div>
 
+    <!-- ===== 快捷鍵提示條 ===== -->
+    <div class="shortcut-hint-bar">
+        <span>⌨️ 快捷鍵：</span>
+        <kbd>⌘/Ctrl+Enter</kbd> 報價
+        <kbd>⌘/Ctrl+I</kbd> 正式單據
+        <kbd>⌘/Ctrl+P</kbd> 列印
+        <kbd>⌘/Ctrl+D</kbd> 明細
+        <kbd>⌘/Ctrl+K</kbd> 命令搜尋
+        <span style="margin-left:auto;opacity:0.6;">拖曳窗位 ☰ 可排序</span>
+    </div>
+
     <!-- ===== 單位換算器 ===== -->
     <div class="converter-panel" id="converterPanel">
         <div class="converter-grid">
@@ -1826,6 +1913,7 @@
                         <option value="m">m</option>
                         <option value="inch">in</option>
                         <option value="ft">ft</option>
+                        <option value="yd">yd</option>
                     </select>
                 </div>
                 <div class="conv-results" id="convLengthResults">
@@ -1834,6 +1922,7 @@
                     <div class="conv-result-item"><div class="unit-label">m</div><div class="unit-value" id="cl-m">-</div></div>
                     <div class="conv-result-item"><div class="unit-label">in</div><div class="unit-value" id="cl-in">-</div></div>
                     <div class="conv-result-item"><div class="unit-label">ft</div><div class="unit-value" id="cl-ft">-</div></div>
+                    <div class="conv-result-item"><div class="unit-label">yd</div><div class="unit-value" id="cl-yd">-</div></div>
                 </div>
             </div>
             <!-- 面積換算 + 視覺化矩形 -->
@@ -1856,6 +1945,7 @@
                             <option value="m">m</option>
                             <option value="inch">in</option>
                             <option value="ft">ft</option>
+                            <option value="yd">yd</option>
                         </select>
                     </div>
                 </div>
@@ -1870,6 +1960,7 @@
                     <div class="conv-result-item"><div class="unit-label">m²</div><div class="unit-value" id="ca-m2">-</div></div>
                     <div class="conv-result-item"><div class="unit-label">in²</div><div class="unit-value" id="ca-in2">-</div></div>
                     <div class="conv-result-item"><div class="unit-label">ft²</div><div class="unit-value" id="ca-ft2">-</div></div>
+                    <div class="conv-result-item"><div class="unit-label">yd²</div><div class="unit-value" id="ca-yd2">-</div></div>
                 </div>
             </div>
         </div>
@@ -1881,6 +1972,11 @@
             <strong id="ui-dash-title">商戶總覽</strong>
             <span id="ui-dash-subtitle">-</span>
             <small id="ui-dash-detail">-</small>
+        </div>
+        <div class="dashboard-card">
+            <strong>窗位總數</strong>
+            <span id="dash-window-count">0</span>
+            <small>所有窗位</small>
         </div>
         <div class="dashboard-card">
             <strong id="ui-dash-quotes-label">已儲存單據</strong>
@@ -1904,7 +2000,7 @@
         </div>
     </div>
 
-    <!-- ===== 平台快捷 ===== -->
+    <!-- ===== 平台快捷操作（無固定定位） ===== -->
     <div class="platform-action-bar">
         <div class="platform-action-bar-inner">
             <div class="platform-meta">
@@ -2053,7 +2149,11 @@
         <div class="panel">
             <div class="panel-title" id="ui-panel-cust">客戶及安裝資料</div>
             <div class="row">
-                <div class="col"><label id="ui-lbl-cname">客戶貴姓:</label><input type="text" id="custName" placeholder="陳 / Wong" oninput="updateDocumentTitle()"></div>
+                <div class="col customer-suggest" id="custSuggestWrap">
+                    <label id="ui-lbl-cname">客戶貴姓:</label>
+                    <input type="text" id="custName" placeholder="陳 / Wong" oninput="updateDocumentTitle(); suggestCustomers()" autocomplete="off">
+                    <div class="suggest-list" id="custSuggestList"></div>
+                </div>
                 <div class="col"><label id="ui-lbl-ctitle">稱謂:</label><select id="custTitle"><option value="mr">先生</option><option value="ms">小姐</option><option value="mrs">太太</option><option value="dr">博士</option></select></div>
                 <div class="col"><label id="ui-lbl-cphone">聯絡電話:</label><input type="number" id="custPhone" placeholder="例: 61234567" oninput="updateDocumentTitle();tryAutofillCustomerByPhone(false)" onblur="tryAutofillCustomerByPhone(true)"></div>
                 <div class="col">
@@ -2143,7 +2243,7 @@
             <textarea id="specialRemarks" rows="3" placeholder="請輸入特別條款或備註..." oninput="if($('resultBox').style.display==='block')calculateAll()"></textarea>
         </div>
 
-        <!-- ===== 操作按鈕 ===== -->
+        <!-- ===== 操作按鈕（無固定定位） ===== -->
         <div class="action-btns">
             <button class="btn-action" id="ui-btn-reset" style="background:#d9827c;" onclick="resetForm()">🔄 一鍵清零</button>
             <button class="btn-action" id="ui-btn-quote" style="background:#8e7f75;" onclick="generateDoc('quote')">📝 報價單</button>
@@ -2329,6 +2429,7 @@
                 unit_label: "單位", unit_mm: "毫米 (mm)", unit_cm: "厘米 (cm)",
                 unit_m: "米 (m)", custom_rate_placeholder: "自訂",
                 unit_inch: "英吋 (in)", unit_ft_display: "英呎 (ft)",
+                unit_yd: "碼 (yd)",
                 lbl_motor_power: "電動供電", lbl_motor_price: "電動軌單價($)",
                 lbl_manual_price: "手動軌單價($)", window_double_price: "此窗雙倍計價",
                 double_price_item: "窗戶雙倍", lbl_sq_price: "單價 (sq/ft)",
@@ -2443,6 +2544,7 @@
                 unit_label: "单位", unit_mm: "毫米 (mm)", unit_cm: "厘米 (cm)",
                 unit_m: "米 (m)", custom_rate_placeholder: "自订",
                 unit_inch: "英寸 (in)", unit_ft_display: "英尺 (ft)",
+                unit_yd: "码 (yd)",
                 lbl_motor_power: "电动供电", lbl_motor_price: "电动轨单价($)",
                 lbl_manual_price: "手动轨单价($)", window_double_price: "此窗双倍计价",
                 double_price_item: "窗户双倍", lbl_sq_price: "单价 (sq/ft)",
@@ -2561,6 +2663,7 @@
                 unit_label: "Unit", unit_mm: "Millimeter (mm)", unit_cm: "Centimeter (cm)",
                 unit_m: "Meter (m)", custom_rate_placeholder: "Custom",
                 unit_inch: "Inch (in)", unit_ft_display: "Foot (ft)",
+                unit_yd: "Yard (yd)",
                 lbl_motor_power: "Motor Power", lbl_motor_price: "Motor Track Unit Price ($)",
                 lbl_manual_price: "Manual Track Unit Price ($)", window_double_price: "Double price for this window",
                 double_price_item: "Window 2x", lbl_sq_price: "Unit Price (sq/ft)",
@@ -2688,9 +2791,9 @@
             refreshAllShellStatus();
             if (getSyncSettings().auto && getSyncSettings().endpoint) setTimeout(() => pullQuoteBackupNow(), 600);
             addWindow();
-            // 換算器初始化
             convertLength();
             convertArea();
+            updateWindowCount();
         }
 
         function loadCustomerDB() { try { const raw = localStorage.getItem(CUSTOMER_DB_KEY);
@@ -2763,12 +2866,66 @@
                 .now())).toLocaleString() : '-';
             if ($('ui-dash-updated-hint')) $('ui-dash-updated-hint').textContent = latest ? (latest.key ?
                 `最後單號 ${latest.key}` : '最近更新') : '無歷史';
+            updateWindowCount();
+        }
+
+        function updateWindowCount() {
+            const count = document.querySelectorAll('.window-item').length;
+            const el = $('dash-window-count');
+            if (el) el.textContent = String(count);
         }
 
         function refreshAllShellStatus() { renderRecentQuoteSelect();
             renderHistoryVersionSelect();
             updateSyncGuidance();
             updateMerchantDashboard(); }
+
+        // ===== 客戶下拉建議 =====
+        function suggestCustomers() {
+            const input = $('custName');
+            const list = $('custSuggestList');
+            const val = input.value.trim().toLowerCase();
+            if (!val) { list.classList.remove('active'); return; }
+            const matches = Object.keys(customerDB).filter(phone => {
+                const entry = customerDB[phone];
+                return (entry.custName && entry.custName.toLowerCase().includes(val)) ||
+                    phone.includes(val);
+            }).slice(0, 8);
+            if (!matches.length) { list.classList.remove('active'); return; }
+            list.innerHTML = matches.map(phone => {
+                const entry = customerDB[phone];
+                return `<div data-phone="${phone}" data-name="${entry.custName||''}" data-title="${entry.custTitle||'mr'}" data-estate="${entry.addrEstate||''}" data-block="${entry.addrBlock||''}" data-floor="${entry.addrFloor||''}" data-unit="${entry.addrUnit||''}" onclick="applyCustomerSuggestion(this)">${entry.custName||'無名'} (${phone})</div>`;
+            }).join('');
+            list.classList.add('active');
+        }
+
+        function applyCustomerSuggestion(el) {
+            const name = el.dataset.name;
+            const phone = el.dataset.phone;
+            const title = el.dataset.title;
+            const estate = el.dataset.estate;
+            const block = el.dataset.block;
+            const floor = el.dataset.floor;
+            const unit = el.dataset.unit;
+            if (name) $('custName').value = name;
+            if (phone) $('custPhone').value = phone;
+            if (title) $('custTitle').value = title;
+            if (estate) $('addrEstate').value = estate;
+            if (block) $('addrBlock').value = block;
+            if (floor) $('addrFloor').value = floor;
+            if (unit) $('addrUnit').value = unit;
+            $('custSuggestList').classList.remove('active');
+            updateDocumentTitle();
+            pushHint(dict[currentLang].customer_autofill || '已選取客戶資料');
+        }
+
+        document.addEventListener('click', function(e) {
+            const wrap = $('custSuggestWrap');
+            if (wrap && !wrap.contains(e.target)) {
+                const list = $('custSuggestList');
+                if (list) list.classList.remove('active');
+            }
+        });
 
         // ===== 歷史 =====
         function getQuoteHistory() { try { const raw = localStorage.getItem(QUOTE_HISTORY_KEY); return Array.isArray(raw ?
@@ -2952,6 +3109,7 @@
             if (s.pdfMode) setPdfMode(s.pdfMode === 'customer' ? 'customer' : 'company');
             updateDocumentTitle();
             calculateAll();
+            updateWindowCount();
         }
 
         async function saveCurrentQuoteRecord() {
@@ -3121,6 +3279,7 @@
             if ($('resultBox').style.display === 'block') calculateAll();
             pushHint((dict[currentLang].template_applied || '已套用') + ': ' + label);
             winItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            updateWindowCount();
         }
 
         // ===== 雲端同步 =====
@@ -3374,6 +3533,8 @@
             if (unit === 'cm') return value / 30.48;
             if (unit === 'm') return value / 0.3048;
             if (unit === 'inch') return value / 12;
+            if (unit === 'ft') return value;
+            if (unit === 'yd') return value * 3;
             return value;
         }
 
@@ -3382,6 +3543,8 @@
             if (unit === 'cm') return value * 10;
             if (unit === 'm') return value * 1000;
             if (unit === 'inch') return value * 25.4;
+            if (unit === 'ft') return value * 304.8;
+            if (unit === 'yd') return value * 914.4;
             return value * 304.8;
         }
 
@@ -3432,7 +3595,7 @@
                 baseCost = Math.round(areaSqFt * baseRate);
             }
             const isOverHeight = (u === 'mm' && h > 2800) || (u === 'cm' && h > 280) || (u === 'm' && h > 2.8) || (u ===
-                'inch' && h > 110) || (u === 'ft' && h > 9.2);
+                'inch' && h > 110) || (u === 'ft' && h > 9.2) || (u === 'yd' && h > 3.1);
             let productCost = baseCost;
             if (isOverHeight) productCost *= 2;
             if (isWindowDouble) productCost *= 2;
@@ -3495,10 +3658,11 @@
             win.dataset.windowId = `w_${Date.now()}_${Math.floor(Math.random()*99999)}`;
             win.className = 'window-item';
             win.innerHTML = `
+            <div class="drag-handle" draggable="true" title="拖曳排序">☰</div>
             <div class="win-flex-row">
               <div style="flex:1.5;min-width:90px;"><label class="lbl-win-pos">${d.pos}</label><select class="room-type"><option value="living">${d.living}</option><option value="dining">${d.dining}</option><option value="master">${d.master}</option><option value="bed">${d.bed}</option><option value="study">${d.study}</option><option value="maid">${d.maid}</option><option value="toilet">${d.toilet}</option><option value="kitchen">${d.kitchen}</option><option value="other">${d.other}</option></select></div>
               <div style="flex:0.8;min-width:60px;"><label class="lbl-win-num">${d.num}</label><select class="room-num"><option value="">${d.none}</option>${Array.from({length:10},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join('')}</select></div>
-              <div style="flex:1.2;min-width:100px;"><label class="lbl-win-unit">${d.unit_label}</label><select class="item-unit" onchange="updateWindowLiveBox(this.closest('.window-item'));if($('resultBox').style.display==='block')calculateAll();"><option value="mm">${d.unit_mm}</option><option value="cm">${d.unit_cm}</option><option value="m">${d.unit_m}</option><option value="inch">${d.unit_inch}</option><option value="ft">${d.unit_ft_display}</option></select></div>
+              <div style="flex:1.2;min-width:100px;"><label class="lbl-win-unit">${d.unit_label}</label><select class="item-unit" onchange="updateWindowLiveBox(this.closest('.window-item'));if($('resultBox').style.display==='block')calculateAll();"><option value="mm">${d.unit_mm}</option><option value="cm">${d.unit_cm}</option><option value="m">${d.unit_m}</option><option value="inch">${d.unit_inch}</option><option value="ft">${d.unit_ft_display}</option><option value="yd">${d.unit_yd||'碼'}</option></select></div>
               <div style="flex:1;min-width:80px;"><label class="lbl-win-w">${d.width}</label><input type="number" class="window-width" value="1500" oninput="updateWindowLiveBox(this.closest('.window-item'));if($('resultBox').style.display==='block')calculateAll();"></div>
               <div style="flex:1;min-width:80px;"><label class="lbl-win-h">${d.height}</label><input type="number" class="window-height" value="2000" oninput="updateWindowLiveBox(this.closest('.window-item'));if($('resultBox').style.display==='block')calculateAll();"></div>
               <div style="flex:1;min-width:90px;" class="simple-hide"><label class="lbl-reserve-lr">${d.reserve_lr}</label><input type="number" class="reserve-lr" value="0" oninput="updateWindowLiveBox(this.closest('.window-item'))"></div>
@@ -3533,7 +3697,43 @@
             updateWindowLiveBox(win);
             setTimeout(() => loadWindowPhotosToGrid(win), 0);
             setUiMode(uiMode);
+            const handle = win.querySelector('.drag-handle');
+            handle.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', win.dataset.windowId);
+                win.classList.add('dragging');
+            });
+            handle.addEventListener('dragend', () => {
+                win.classList.remove('dragging');
+            });
+            const list = $('windowList');
+            list.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                const dragging = document.querySelector('.window-item.dragging');
+                if (!dragging) return;
+                const afterElement = getDragAfterElement(list, e.clientY);
+                if (afterElement == null) {
+                    list.appendChild(dragging);
+                } else {
+                    list.insertBefore(dragging, afterElement);
+                }
+                updateWindowCount();
+                if ($('resultBox').style.display === 'block') calculateAll();
+            });
+            updateWindowCount();
             return win;
+        }
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.window-item:not(.dragging)')];
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
 
         function removeWindow(btn) {
@@ -3543,6 +3743,7 @@
             if (id) dbDeleteWindowPhotos(id);
             winItem.remove();
             if ($('resultBox').style.display === 'block') calculateAll();
+            updateWindowCount();
         }
 
         function duplicateLastWindow() {
@@ -3590,6 +3791,7 @@
             }
             if ($('resultBox').style.display === 'block') calculateAll();
             clone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            updateWindowCount();
         }
 
         function handleLayerChange(sel) {
@@ -3920,6 +4122,7 @@
             $('resultBox').style.display = 'none';
             $('ui-btn-print').style.display = 'none';
             updateDocumentTitle();
+            updateWindowCount();
         }
 
         function updateDocumentTitle() {
@@ -4158,17 +4361,17 @@
         function convertLength() {
             const input = parseFloat($('convLengthInput').value) || 0;
             const unit = $('convLengthUnit').value;
-            const toMM = { mm: 1, cm: 10, m: 1000, inch: 25.4, ft: 304.8 };
+            const toMM = { mm: 1, cm: 10, m: 1000, inch: 25.4, ft: 304.8, yd: 914.4 };
             const mm = input * (toMM[unit] || 1);
             const map = {
                 mm: v => v,
                 cm: v => v / 10,
                 m: v => v / 1000,
                 inch: v => v / 25.4,
-                ft: v => v / 304.8
+                ft: v => v / 304.8,
+                yd: v => v / 914.4
             };
-            const units = ['mm', 'cm', 'm', 'inch', 'ft'];
-            const labels = ['mm', 'cm', 'm', 'in', 'ft'];
+            const units = ['mm', 'cm', 'm', 'inch', 'ft', 'yd'];
             units.forEach((u, i) => {
                 const el = document.getElementById(`cl-${u}`);
                 if (el) el.textContent = u === 'mm' ? Math.round(map[u](mm) * 100) / 100 : (map[u](mm) < 0.01 ?
@@ -4183,11 +4386,9 @@
             const w = canvas.width,
                 h = canvas.height;
             ctx.clearRect(0, 0, w, h);
-            // 計算比例，留白邊距
             const pad = 20;
             const maxW = w - pad * 2,
                 maxH = h - pad * 2;
-            // 若長或寬為0，不繪製
             if (length <= 0 || width <= 0) {
                 ctx.font = '14px sans-serif';
                 ctx.fillStyle = '#999';
@@ -4196,15 +4397,13 @@
                 ctx.fillText('請輸入正數', w / 2, h / 2);
                 return;
             }
-            // 計算縮放比例，使矩形完全顯示在畫布內
             const scaleX = maxW / length;
             const scaleY = maxH / width;
-            const scale = Math.min(scaleX, scaleY, 1); // 限制最大縮放為1，避免太大
+            const scale = Math.min(scaleX, scaleY, 1);
             const drawW = length * scale;
             const drawH = width * scale;
             const x0 = (w - drawW) / 2;
             const y0 = (h - drawH) / 2;
-            // 繪製矩形
             ctx.fillStyle = '#e6d9cc';
             ctx.shadowColor = 'rgba(0,0,0,0.1)';
             ctx.shadowBlur = 6;
@@ -4213,14 +4412,11 @@
             ctx.strokeStyle = '#513c2f';
             ctx.lineWidth = 2;
             ctx.strokeRect(x0, y0, drawW, drawH);
-            // 標註尺寸
             ctx.fillStyle = '#513c2f';
             ctx.font = 'bold 14px sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'bottom';
-            // 下方標註寬度
             ctx.fillText(`${width} ${unit}`, w / 2, y0 + drawH + 18);
-            // 右側標註長度（旋轉文字）
             ctx.save();
             ctx.translate(x0 + drawW + 16, y0 + drawH / 2);
             ctx.rotate(-Math.PI / 2);
@@ -4228,7 +4424,6 @@
             ctx.textBaseline = 'bottom';
             ctx.fillText(`${length} ${unit}`, 0, 0);
             ctx.restore();
-            // 更新標籤
             const label = document.getElementById('rectDimLabel');
             if (label) label.textContent = `長: ${length} ${unit} × 寬: ${width} ${unit}`;
         }
@@ -4237,7 +4432,7 @@
             const len = parseFloat($('convAreaLen').value) || 0;
             const wid = parseFloat($('convAreaWid').value) || 0;
             const unit = $('convAreaUnit').value;
-            const toMM = { mm: 1, cm: 10, m: 1000, inch: 25.4, ft: 304.8 };
+            const toMM = { mm: 1, cm: 10, m: 1000, inch: 25.4, ft: 304.8, yd: 914.4 };
             const mmLen = len * toMM[unit],
                 mmWid = wid * toMM[unit];
             const areaMM2 = mmLen * mmWid;
@@ -4246,10 +4441,10 @@
                 cm2: v => v / 100,
                 m2: v => v / 1e6,
                 in2: v => v / 645.16,
-                ft2: v => v / 92903.04
+                ft2: v => v / 92903.04,
+                yd2: v => v / 836127.36
             };
-            const units = ['mm2', 'cm2', 'm2', 'in2', 'ft2'];
-            const labels = ['mm²', 'cm²', 'm²', 'in²', 'ft²'];
+            const units = ['mm2', 'cm2', 'm2', 'in2', 'ft2', 'yd2'];
             const resultEl = $('convAreaResult');
             if (resultEl) resultEl.textContent =
                 `📐 面積 = ${len} × ${wid} ${unit} = ${Math.round(areaMM2)} mm² = ${Math.round(map.cm2(areaMM2)*100)/100} cm² = ${Math.round(map.m2(areaMM2)*10000)/10000} m²`;
@@ -4260,7 +4455,6 @@
                     el.textContent = val < 0.01 ? '<0.01' : Math.round(val * 100) / 100;
                 }
             });
-            // 繪製矩形
             drawRect(len, wid, unit);
         }
 
@@ -4390,7 +4584,6 @@
                 wa.innerHTML =
                     `<option value="compact">${d.wa_compact}</option><option value="detailed">${d.wa_detailed}</option><option value="engineering">${d.wa_engineering}</option>`;
                 wa.value = v; }
-            // 換算器文字
             $('conv-length-title').innerText = d.conv_length_title || '📏 長度換算';
             $('conv-area-title').innerText = d.conv_area_title || '📐 面積換算 (長 × 寬)';
             $('conv-lbl-value').innerText = d.conv_lbl_value || '數值';
@@ -4398,7 +4591,6 @@
             $('conv-lbl-wid').innerText = d.conv_lbl_wid || '寬';
             $('conv-lbl-unit').innerText = d.conv_lbl_unit || '單位';
 
-            // 更新窗位內文字
             document.querySelectorAll('.window-item').forEach(winItem => {
                 const d2 = dict[currentLang];
                 const labels = winItem.querySelectorAll(
@@ -4435,7 +4627,6 @@
                     const cls = el.className.split(' ').find(c => map[c]);
                     if (cls && map[cls]) el.innerText = map[cls];
                 });
-                // Select options
                 const roomSel = winItem.querySelector('.room-type');
                 if (roomSel) { const v = roomSel.value;
                     roomSel.innerHTML =
@@ -4444,7 +4635,7 @@
                 const unitSel = winItem.querySelector('.item-unit');
                 if (unitSel) { const v = unitSel.value;
                     unitSel.innerHTML =
-                        `<option value="mm">${d2.unit_mm}</option><option value="cm">${d2.unit_cm}</option><option value="m">${d2.unit_m}</option><option value="inch">${d2.unit_inch}</option><option value="ft">${d2.unit_ft_display}</option>`;
+                        `<option value="mm">${d2.unit_mm}</option><option value="cm">${d2.unit_cm}</option><option value="m">${d2.unit_m}</option><option value="inch">${d2.unit_inch}</option><option value="ft">${d2.unit_ft_display}</option><option value="yd">${d2.unit_yd||'碼'}</option>`;
                     unitSel.value = v; }
                 const layerSel = winItem.querySelector('.layer-type');
                 if (layerSel) { const v = layerSel.value; const opts = { both: d2.both, double_blackout: d2
@@ -4489,8 +4680,8 @@
         window.addEventListener('load', function() {
             document.querySelectorAll('.mini-panel').forEach(p => p.classList.remove('open'));
             $('converterPanel').classList.remove('open');
-            // 繪製初始矩形
             convertArea();
+            updateWindowCount();
         });
     </script>
 </body>
