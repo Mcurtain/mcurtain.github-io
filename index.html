@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="zh-HK">
-<head>
+<html lang="zh-HK"><head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="theme-color" content="#4a3326">
-    <title>MCurtain 窗簾工程系統 v25</title>
+    <title>M21402_未命名_報價單</title>
     <style>
         /* ===== 全局變量與重置 ===== */
         :root {
@@ -877,6 +876,38 @@
             border-radius: var(--radius-sm);
             border: 1px solid #ebdcd3;
         }
+        .invoice-client-info .info-line {
+            display: block;
+            padding: 2px 0;
+            text-align: left;
+        }
+        .invoice-client-info .info-line strong {
+            display: inline-block;
+            min-width: 72px;
+            color: #513c2f;
+            font-weight: 700;
+        }
+        .invoice-client-info .info-line .info-value {
+            font-weight: 500;
+            color: #3f2e23;
+        }
+        .invoice-client-info .info-address-detail {
+            margin-top: 4px;
+            padding-left: 72px;
+            font-size: 13px;
+            color: #4a3f35;
+            word-break: break-word;
+        }
+        .invoice-client-info .info-line.info-line-addr {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 2px;
+        }
+        .invoice-client-info .info-line.info-line-addr .info-value {
+            flex: 1;
+            min-width: 120px;
+        }
         .inv-number-badge {
             font-size: 16px;
             font-weight: 700;
@@ -1159,6 +1190,63 @@
             background: var(--brand-soft);
         }
 
+        /* ===== 客戶歷史訂單彈窗 ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            padding: 20px;
+        }
+        .modal-overlay.open {
+            display: flex;
+        }
+        .modal-box {
+            background: #fff;
+            border-radius: var(--radius);
+            max-width: 700px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 24px;
+            box-shadow: var(--shadow-strong);
+            border: 1px solid var(--border);
+        }
+        .modal-box h3 {
+            margin-top: 0;
+            color: var(--brand);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+        .modal-box .close-btn {
+            float: right;
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+        .modal-box .history-list {
+            list-style: none;
+            padding: 0;
+        }
+        .modal-box .history-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0ebe5;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .modal-box .history-list li:hover {
+            background: var(--brand-soft);
+        }
+
         /* ===== 歷史/同步/模板 共用 ===== */
         .history-bar,
         .window-template-bar,
@@ -1398,7 +1486,8 @@
             .window-photo-box,
             .window-live-box,
             .converter-panel,
-            .shortcut-hint-bar {
+            .shortcut-hint-bar,
+            .modal-overlay {
                 display: none !important;
             }
             .result-box {
@@ -1425,6 +1514,17 @@
                 margin-bottom: 8px;
                 padding: 8px;
             }
+            .invoice-client-info .info-line {
+                padding: 1px 0;
+                font-size: 11px;
+            }
+            .invoice-client-info .info-line strong {
+                min-width: 60px;
+            }
+            .invoice-client-info .info-address-detail {
+                padding-left: 60px;
+                font-size: 10px;
+            }
             .table-responsive {
                 overflow: visible;
                 border: none;
@@ -1449,10 +1549,45 @@
                 margin-bottom: 6px;
                 font-size: 11px;
                 background: transparent;
-                align-items: flex-end;
+                align-items: flex-end !important;
+                width: 100%;
             }
             .summary-item {
-                width: 260px;
+                width: 260px !important;
+                max-width: 260px !important;
+                margin-left: auto !important;
+                margin-right: 0 !important;
+                display: flex;
+                justify-content: space-between !important;
+                text-align: right !important;
+            }
+            .summary-item span:first-child {
+                flex: 1;
+                padding-right: 8px;
+                text-align: left;
+            }
+            .summary-item span:last-child {
+                text-align: right;
+                white-space: nowrap;
+            }
+            .grand-total {
+                max-width: 260px !important;
+                width: 260px !important;
+                margin-left: auto !important;
+                margin-right: 0 !important;
+                font-size: 16px;
+            }
+            .balance-highlight {
+                max-width: 260px !important;
+                width: 260px !important;
+                margin-left: auto !important;
+                margin-right: 0 !important;
+            }
+            .receipt-highlight {
+                max-width: 260px !important;
+                width: 260px !important;
+                margin-left: auto !important;
+                margin-right: 0 !important;
             }
             .invoice-footer {
                 margin-top: 6px;
@@ -1490,6 +1625,9 @@
             .summary-wrapper,
             .signature-section {
                 page-break-inside: avoid;
+            }
+            .summary-item[style*="display: none"] {
+                display: none !important;
             }
         }
 
@@ -1530,7 +1668,6 @@
                 padding: 10px;
                 text-align: center;
                 gap: 10px;
-                /* 無 position: sticky，自然滾動 */
             }
             .mode-toggle-container,
             .lang-group {
@@ -1545,7 +1682,6 @@
             }
             .platform-action-bar {
                 padding: 8px;
-                /* 無 position: sticky */
             }
             .platform-meta {
                 min-width: 100%;
@@ -1629,7 +1765,6 @@
                 border: 1px solid #d9bda7;
                 border-radius: 12px;
                 padding: 8px;
-                /* 無 position: sticky，自然滾動 */
             }
             .btn-action {
                 width: 100%;
@@ -1726,6 +1861,21 @@
             }
             .shortcut-hint-bar span {
                 display: inline;
+            }
+            .modal-box {
+                padding: 16px;
+                max-height: 90vh;
+            }
+            .invoice-client-info .info-line {
+                padding: 3px 0;
+                font-size: 13px;
+            }
+            .invoice-client-info .info-line strong {
+                min-width: 60px;
+            }
+            .invoice-client-info .info-address-detail {
+                padding-left: 60px;
+                font-size: 12px;
             }
         }
         @media (min-width: 768px) and (max-width: 1023px) {
@@ -1858,7 +2008,7 @@
         }
     </style>
 </head>
-<body onload="loadConfig()">
+<body onload="loadConfig()" class="mode-customer">
 
     <!-- ===== 頂部控制欄 ===== -->
     <div class="top-ctrl">
@@ -1888,15 +2038,7 @@
     </div>
 
     <!-- ===== 快捷鍵提示條 ===== -->
-    <div class="shortcut-hint-bar">
-        <span>⌨️ 快捷鍵：</span>
-        <kbd>⌘/Ctrl+Enter</kbd> 報價
-        <kbd>⌘/Ctrl+I</kbd> 正式單據
-        <kbd>⌘/Ctrl+P</kbd> 列印
-        <kbd>⌘/Ctrl+D</kbd> 明細
-        <kbd>⌘/Ctrl+K</kbd> 命令搜尋
-        <span style="margin-left:auto;opacity:0.6;">拖曳窗位 ☰ 可排序</span>
-    </div>
+    
 
     <!-- ===== 單位換算器 ===== -->
     <div class="converter-panel" id="converterPanel">
@@ -1909,7 +2051,7 @@
                     <input type="number" id="convLengthInput" value="1" step="any" min="0" oninput="convertLength()">
                     <select id="convLengthUnit" onchange="convertLength()">
                         <option value="mm">mm</option>
-                        <option value="cm" selected>cm</option>
+                        <option value="cm" selected="">cm</option>
                         <option value="m">m</option>
                         <option value="inch">in</option>
                         <option value="ft">ft</option>
@@ -1917,12 +2059,12 @@
                     </select>
                 </div>
                 <div class="conv-results" id="convLengthResults">
-                    <div class="conv-result-item"><div class="unit-label">mm</div><div class="unit-value" id="cl-mm">-</div></div>
-                    <div class="conv-result-item"><div class="unit-label">cm</div><div class="unit-value" id="cl-cm">-</div></div>
-                    <div class="conv-result-item"><div class="unit-label">m</div><div class="unit-value" id="cl-m">-</div></div>
+                    <div class="conv-result-item"><div class="unit-label">mm</div><div class="unit-value" id="cl-mm">10</div></div>
+                    <div class="conv-result-item"><div class="unit-label">cm</div><div class="unit-value" id="cl-cm">1</div></div>
+                    <div class="conv-result-item"><div class="unit-label">m</div><div class="unit-value" id="cl-m">0.01</div></div>
                     <div class="conv-result-item"><div class="unit-label">in</div><div class="unit-value" id="cl-in">-</div></div>
-                    <div class="conv-result-item"><div class="unit-label">ft</div><div class="unit-value" id="cl-ft">-</div></div>
-                    <div class="conv-result-item"><div class="unit-label">yd</div><div class="unit-value" id="cl-yd">-</div></div>
+                    <div class="conv-result-item"><div class="unit-label">ft</div><div class="unit-value" id="cl-ft">0.03</div></div>
+                    <div class="conv-result-item"><div class="unit-label">yd</div><div class="unit-value" id="cl-yd">0.01</div></div>
                 </div>
             </div>
             <!-- 面積換算 + 視覺化矩形 -->
@@ -1941,7 +2083,7 @@
                         <label id="conv-lbl-unit">單位</label>
                         <select id="convAreaUnit" onchange="convertArea()">
                             <option value="mm">mm</option>
-                            <option value="cm" selected>cm</option>
+                            <option value="cm" selected="">cm</option>
                             <option value="m">m</option>
                             <option value="inch">in</option>
                             <option value="ft">ft</option>
@@ -1949,18 +2091,18 @@
                         </select>
                     </div>
                 </div>
-                <div class="conv-area-result" id="convAreaResult">—</div>
+                <div class="conv-area-result" id="convAreaResult">📐 面積 = 1 × 1 cm = 100 mm² = 1 cm² = 0.0001 m²</div>
                 <div class="rect-canvas-wrap">
                     <canvas id="rectCanvas" width="300" height="200"></canvas>
                     <div class="rect-dim-label" id="rectDimLabel">長: 1 cm × 寬: 1 cm</div>
                 </div>
                 <div class="conv-results" id="convAreaResults">
-                    <div class="conv-result-item"><div class="unit-label">mm²</div><div class="unit-value" id="ca-mm2">-</div></div>
-                    <div class="conv-result-item"><div class="unit-label">cm²</div><div class="unit-value" id="ca-cm2">-</div></div>
-                    <div class="conv-result-item"><div class="unit-label">m²</div><div class="unit-value" id="ca-m2">-</div></div>
-                    <div class="conv-result-item"><div class="unit-label">in²</div><div class="unit-value" id="ca-in2">-</div></div>
-                    <div class="conv-result-item"><div class="unit-label">ft²</div><div class="unit-value" id="ca-ft2">-</div></div>
-                    <div class="conv-result-item"><div class="unit-label">yd²</div><div class="unit-value" id="ca-yd2">-</div></div>
+                    <div class="conv-result-item"><div class="unit-label">mm²</div><div class="unit-value" id="ca-mm2">100</div></div>
+                    <div class="conv-result-item"><div class="unit-label">cm²</div><div class="unit-value" id="ca-cm2">1</div></div>
+                    <div class="conv-result-item"><div class="unit-label">m²</div><div class="unit-value" id="ca-m2">&lt;0.01</div></div>
+                    <div class="conv-result-item"><div class="unit-label">in²</div><div class="unit-value" id="ca-in2">0.16</div></div>
+                    <div class="conv-result-item"><div class="unit-label">ft²</div><div class="unit-value" id="ca-ft2">&lt;0.01</div></div>
+                    <div class="conv-result-item"><div class="unit-label">yd²</div><div class="unit-value" id="ca-yd2">&lt;0.01</div></div>
                 </div>
             </div>
         </div>
@@ -1970,17 +2112,17 @@
     <div class="merchant-dashboard">
         <div class="dashboard-card primary wide">
             <strong id="ui-dash-title">商戶總覽</strong>
-            <span id="ui-dash-subtitle">-</span>
-            <small id="ui-dash-detail">-</small>
+            <span id="ui-dash-subtitle">本機為主</span>
+            <small id="ui-dash-detail">本機：15張 · 0組客戶</small>
         </div>
         <div class="dashboard-card">
             <strong>窗位總數</strong>
-            <span id="dash-window-count">0</span>
+            <span id="dash-window-count">1</span>
             <small>所有窗位</small>
         </div>
         <div class="dashboard-card">
             <strong id="ui-dash-quotes-label">已儲存單據</strong>
-            <span id="ui-dash-quotes">0</span>
+            <span id="ui-dash-quotes">15</span>
             <small id="ui-dash-quotes-hint">快速找回舊單</small>
         </div>
         <div class="dashboard-card">
@@ -1995,25 +2137,14 @@
         </div>
         <div class="dashboard-card">
             <strong id="ui-dash-updated-label">最近更新</strong>
-            <span id="ui-dash-updated">-</span>
-            <small id="ui-dash-updated-hint">-</small>
+            <span id="ui-dash-updated">6/22/2026, 4:17:01 AM</span>
+            <small id="ui-dash-updated-hint">最後單號 M21402</small>
         </div>
     </div>
 
     <!-- ===== 平台快捷操作（無固定定位） ===== -->
     <div class="platform-action-bar">
-        <div class="platform-action-bar-inner">
-            <div class="platform-meta">
-                <strong id="ui-platform-ready">跨平台快捷操作</strong>
-                <span id="ui-platform-hint">-</span>
-            </div>
-            <div class="platform-action-group">
-                <button class="platform-quick-btn" id="ui-quick-quote" onclick="generateDoc('quote')">報價</button>
-                <button class="platform-quick-btn" id="ui-quick-invoice" onclick="generateDoc('invoice')">正式單據</button>
-                <button class="platform-quick-btn" id="ui-quick-adapt" onclick="runQuickPrint()">列印/PDF</button>
-                <button class="platform-quick-btn" id="ui-quick-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">回到頂部</button>
-            </div>
-        </div>
+        
     </div>
 
     <!-- ===== 主容器 ===== -->
@@ -2045,6 +2176,10 @@
                 <div class="col"><label>蚊網 ($/sqft):</label><input type="number" id="rateMosq" value="40" oninput="saveConfig()"></div>
                 <div class="col"><label id="ui-lbl-rate-manual">手動路軌 ($):</label><input type="number" id="rateManualTrack" value="180" oninput="saveConfig()"></div>
                 <div class="col"><label id="ui-lbl-rate-motor">電動路軌 ($):</label><input type="number" id="rateMotorTrack" value="2500" oninput="saveConfig()"></div>
+            </div>
+            <div class="row">
+                <div class="col"><label>蚊網最低平方呎:</label><input type="number" id="minSqMosquito" value="10" min="0" step="0.5" oninput="saveConfig()"></div>
+                <div class="col"><label>其他平方呎類最低平方呎:</label><input type="number" id="minSqOther" value="15" min="0" step="0.5" oninput="saveConfig()"></div>
             </div>
         </div>
 
@@ -2091,11 +2226,11 @@
                                 <span id="ui-history-hint">儲存/載入/匯出/匯入</span>
                                 <div class="history-tools">
                                     <input type="search" id="quoteHistorySearch" placeholder="搜尋單號 / 客戶 / 電話 / 備註" oninput="renderQuoteHistorySelect()">
-                                    <select id="historyVersionSelect" onchange="renderHistoryVersionSelect()"></select>
+                                    <select id="historyVersionSelect" onchange="renderHistoryVersionSelect()"><option value="0">最新 · 6/22/2026, 3:33:25 AM</option><option value="1">v2 · 6/22/2026, 3:33:24 AM</option><option value="2">v3 · 6/22/2026, 3:33:03 AM</option></select>
                                 </div>
                             </div>
                             <div class="history-actions">
-                                <select id="quoteHistorySelect" class="history-select" onchange="renderHistoryVersionSelect()" style="min-width:180px;"></select>
+                                <select id="quoteHistorySelect" class="history-select" onchange="renderHistoryVersionSelect()" style="min-width:180px;"><option value="M21402">#M21402 · - · 6/22/2026, 4:17:01 AM · v6</option><option value="M39270">#M39270 · - · 6/22/2026, 3:51:53 AM</option><option value="M25355">#M25355 · - · 6/22/2026, 3:42:44 AM</option><option value="M50670">#M50670 · - · 6/22/2026, 3:33:25 AM · v3</option><option value="M23349">#M23349 · - · 6/22/2026, 3:22:27 AM</option><option value="M81231">#M81231 · - · 6/22/2026, 3:22:05 AM</option><option value="M48883">#M48883 · - · 6/22/2026, 3:04:34 AM · v6</option><option value="M47403">#M47403 · - · 6/22/2026, 3:02:24 AM · v6</option><option value="M46446">#M46446 · - · 6/22/2026, 2:27:04 AM</option><option value="M13185">#M13185 · - · 6/22/2026, 2:25:51 AM · v6</option><option value="M82627">#M82627 · - · 6/22/2026, 2:05:45 AM</option><option value="M76196">#M76196 · - · 6/22/2026, 1:56:25 AM</option><option value="M20097">#M20097 · Li · 6/21/2026, 3:16:39 PM · v6</option><option value="M85187">#M85187 · - · 6/21/2026, 2:15:00 PM · v3</option><option value="M97544">#M97544 · - · 6/21/2026, 3:32:22 AM</option></select>
                                 <button class="history-btn primary" id="ui-btn-save-record" onclick="saveCurrentQuoteRecord()">儲存</button>
                                 <button class="history-btn" id="ui-btn-load-record" onclick="loadSelectedQuoteRecord()">載入</button>
                                 <button class="history-btn" id="ui-btn-delete-record" onclick="deleteSelectedQuoteRecord()">刪除</button>
@@ -2105,7 +2240,7 @@
                             <div class="history-version-row">
                                 <button class="history-btn" id="ui-btn-load-version" onclick="loadSelectedQuoteVersion()">載入版本</button>
                                 <button class="history-btn" id="ui-btn-reveal-versions" onclick="renderHistoryVersionSelect()">更新版本</button>
-                                <select id="recentQuoteSelect" class="history-quick-select" onchange="loadRecentQuoteSelection()" style="min-width:160px;flex:1;"></select>
+                                <select id="recentQuoteSelect" class="history-quick-select" onchange="loadRecentQuoteSelection()" style="min-width:160px;flex:1;"><option value="">最近單據</option><option value="M21402">#M21402 · - · 6/22/2026, 4:16:49 AM · v6</option><option value="M39270">#M39270 · - · 6/22/2026, 3:51:53 AM</option><option value="M25355">#M25355 · - · 6/22/2026, 3:42:44 AM</option><option value="M50670">#M50670 · - · 6/22/2026, 3:33:25 AM · v3</option><option value="M23349">#M23349 · - · 6/22/2026, 3:22:27 AM</option><option value="M81231">#M81231 · - · 6/22/2026, 3:22:05 AM</option><option value="M48883">#M48883 · - · 6/22/2026, 3:04:34 AM · v6</option><option value="M47403">#M47403 · - · 6/22/2026, 3:02:24 AM · v6</option></select>
                                 <button class="history-btn" id="ui-btn-refresh-recent" onclick="renderRecentQuoteSelect()">最近</button>
                             </div>
                         </div>
@@ -2120,7 +2255,7 @@
                         <div class="sync-bar" style="margin:0;border:none;background:transparent;padding:0;">
                             <div class="sync-meta">
                                 <span id="ui-sync-hint">設定 endpoint 自動同步</span>
-                                <span class="sync-note" id="ui-sync-note">建議：REST / Supabase / Google Apps Script</span>
+                                <span class="sync-note" id="ui-sync-note">建議：REST / JSON</span>
                             </div>
                             <div class="sync-fields">
                                 <select class="sync-input" id="syncProvider" onchange="saveSyncConfig()">
@@ -2151,24 +2286,28 @@
             <div class="row">
                 <div class="col customer-suggest" id="custSuggestWrap">
                     <label id="ui-lbl-cname">客戶貴姓:</label>
-                    <input type="text" id="custName" placeholder="陳 / Wong" oninput="updateDocumentTitle(); suggestCustomers()" autocomplete="off">
+                    <input type="text" id="custName" placeholder="陳 / Wong" oninput="updateDocumentTitle(); suggestCustomers(); autoSaveDraft()" autocomplete="off">
                     <div class="suggest-list" id="custSuggestList"></div>
                 </div>
-                <div class="col"><label id="ui-lbl-ctitle">稱謂:</label><select id="custTitle"><option value="mr">先生</option><option value="ms">小姐</option><option value="mrs">太太</option><option value="dr">博士</option></select></div>
-                <div class="col"><label id="ui-lbl-cphone">聯絡電話:</label><input type="number" id="custPhone" placeholder="例: 61234567" oninput="updateDocumentTitle();tryAutofillCustomerByPhone(false)" onblur="tryAutofillCustomerByPhone(true)"></div>
+                <div class="col"><label id="ui-lbl-ctitle">稱謂:</label><select id="custTitle" onchange="autoSaveDraft()"><option value="mr">先生</option><option value="ms">小姐</option><option value="mrs">太太</option><option value="dr">博士</option></select></div>
+                <div class="col"><label id="ui-lbl-cphone">聯絡電話:</label><input type="number" id="custPhone" placeholder="例: 61234567" oninput="updateDocumentTitle();tryAutofillCustomerByPhone(false);autoSaveDraft()" onblur="tryAutofillCustomerByPhone(true)"></div>
                 <div class="col">
                     <label id="ui-lbl-qnum">單號 (5位):</label>
                     <div style="display:flex;align-items:center;"><span style="font-weight:700;margin-right:5px;font-size:15px;color:#513c2f;">#M</span>
-                        <input type="number" id="quoteNo" placeholder="00001" oninput="if(this.value.length>5)this.value=this.value.slice(0,5);updateDocumentTitle();">
+                        <input type="number" id="quoteNo" placeholder="00001" oninput="if(this.value.length&gt;5)this.value=this.value.slice(0,5);updateDocumentTitle();autoSaveDraft()">
                     </div>
                 </div>
+                <div class="col" style="min-width:120px;">
+                    <label>客戶歷史訂單</label>
+                    <button class="btn-action btn-soft-lite" style="min-width:100%;padding:8px;" onclick="showCustomerHistory()">📂 查看</button>
+                </div>
             </div>
-            <div id="customerAutoHint" class="customer-auto-hint"></div>
+            <div id="customerAutoHint" class="customer-auto-hint" style="display: none;">單據已儲存: M21402</div>
             <div class="row simple-hide">
-                <div class="col" style="flex:2;min-width:100%;"><label id="ui-lbl-caddr">屋苑/大廈:</label><input type="text" id="addrEstate" placeholder="例: 沙田第一城"></div>
-                <div class="col"><label id="ui-lbl-addr-b">座數:</label><input type="text" id="addrBlock" placeholder="例: 3"></div>
-                <div class="col"><label id="ui-lbl-addr-f">樓層:</label><input type="text" id="addrFloor" placeholder="例: 28"></div>
-                <div class="col"><label id="ui-lbl-addr-u">單位:</label><input type="text" id="addrUnit" placeholder="例: D"></div>
+                <div class="col" style="flex:2;min-width:100%;"><label id="ui-lbl-caddr">屋苑/大廈:</label><input type="text" id="addrEstate" placeholder="例: 沙田第一城" oninput="autoSaveDraft()"></div>
+                <div class="col"><label id="ui-lbl-addr-b">座數:</label><input type="text" id="addrBlock" placeholder="例: 3" oninput="autoSaveDraft()"></div>
+                <div class="col"><label id="ui-lbl-addr-f">樓層:</label><input type="text" id="addrFloor" placeholder="例: 28" oninput="autoSaveDraft()"></div>
+                <div class="col"><label id="ui-lbl-addr-u">單位:</label><input type="text" id="addrUnit" placeholder="例: D" oninput="autoSaveDraft()"></div>
             </div>
             <div class="row simple-hide" style="margin-top:12px;border-top:1px dashed #d1c7bd;padding-top:12px;">
                 <div class="col" style="flex:2;min-width:100%;">
@@ -2176,7 +2315,7 @@
                     <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;">
                         <div style="display:flex;flex-direction:column;gap:2px;flex:1;min-width:130px;">
                             <span style="font-size:10px;color:#a09287;padding-left:2px;">(格式: 年-月-日)</span>
-                            <input type="date" id="measureDate" style="width:100%;" onchange="autoSetInstallDate();if($('resultBox').style.display==='block')calculateAll();">
+                            <input type="date" id="measureDate" style="width:100%;" onchange="autoSetInstallDate();if($('resultBox').style.display==='block')calculateAll();autoSaveDraft()">
                         </div>
                         <div style="display:flex;flex-direction:column;gap:2px;flex:1.5;min-width:180px;">
                             <div style="display:flex;justify-content:space-between;padding:0 4px;">
@@ -2184,9 +2323,9 @@
                                 <span style="font-size:10px;color:#a09287;">(例: 16:00)</span>
                             </div>
                             <div style="display:flex;gap:5px;align-items:center;">
-                                <input type="time" id="measureStartTime" style="flex:1;width:100%;">
+                                <input type="time" id="measureStartTime" style="flex:1;width:100%;" onchange="autoSaveDraft()">
                                 <span style="color:#8e7f75;font-weight:700;">至</span>
-                                <input type="time" id="measureEndTime" style="flex:1;width:100%;">
+                                <input type="time" id="measureEndTime" style="flex:1;width:100%;" onchange="autoSaveDraft()">
                             </div>
                         </div>
                         <button onclick="generateICS()" style="background:#b5651d;color:#fff;border:none;padding:8px 14px;border-radius:var(--radius-sm);cursor:pointer;font-weight:700;flex:1;min-width:120px;box-shadow:0 2px 5px rgba(0,0,0,0.1);display:flex;justify-content:center;align-items:center;gap:4px;height:36px;font-size:13px;">📅 行事曆</button>
@@ -2194,15 +2333,47 @@
                 </div>
                 <div class="col" style="margin-top:8px;min-width:100%;">
                     <label id="ui-lbl-date-i">預計安裝 (選填):</label>
-                    <input type="date" id="installDate" onchange="if($('resultBox').style.display==='block')calculateAll();">
+                    <input type="date" id="installDate" onchange="if($('resultBox').style.display==='block')calculateAll();autoSaveDraft()">
                 </div>
             </div>
         </div>
 
         <!-- ===== 窗位列表 ===== -->
-        <div id="windowList"></div>
-        <button class="add-btn" id="ui-btn-addwin" onclick="addWindow()">+ 新增窗戶位置</button>
-        <button class="add-btn dark" id="ui-btn-dupwin" onclick="duplicateLastWindow()">+ 複製上一窗位</button>
+        <div id="windowList"><div data-window-id="w_1782068547230_38680" class="window-item">
+            <div class="drag-handle" draggable="true" title="拖曳排序">☰</div>
+            <div class="win-flex-row">
+              <div style="flex:1.5;min-width:90px;"><label class="lbl-win-pos">位置</label><select class="room-type"><option value="living">客廳</option><option value="dining">飯廳</option><option value="master">主人房</option><option value="bed">睡房</option><option value="study">書房</option><option value="maid">工人房</option><option value="toilet">廁所</option><option value="kitchen">廚房</option><option value="other">其他</option></select></div>
+              <div style="flex:0.8;min-width:60px;"><label class="lbl-win-num">編號</label><select class="room-num"><option value="">無</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></div>
+              <div style="flex:1.2;min-width:100px;"><label class="lbl-win-unit">單位</label><select class="item-unit" onchange="updateWindowLiveBox(this.closest('.window-item'));if($('resultBox').style.display==='block')calculateAll();"><option value="mm">毫米 (mm)</option><option value="cm">厘米 (cm)</option><option value="m">米 (m)</option><option value="inch">英吋 (in)</option><option value="ft">英呎 (ft)</option><option value="yd">碼 (yd)</option></select></div>
+              <div style="flex:1;min-width:80px;"><label class="lbl-win-w">闊度</label><input type="number" class="window-width" value="1500" oninput="updateWindowLiveBox(this.closest('.window-item'));if($('resultBox').style.display==='block')calculateAll();autoSaveDraft()"></div>
+              <div style="flex:1;min-width:80px;"><label class="lbl-win-h">高度</label><input type="number" class="window-height" value="2000" oninput="updateWindowLiveBox(this.closest('.window-item'));if($('resultBox').style.display==='block')calculateAll();autoSaveDraft()"></div>
+              <div style="flex:1;min-width:90px;" class="simple-hide"><label class="lbl-reserve-lr">左右預留(mm)</label><input type="number" class="reserve-lr" value="0" oninput="updateWindowLiveBox(this.closest('.window-item'));autoSaveDraft()"></div>
+              <div style="flex:1;min-width:90px;" class="simple-hide"><label class="lbl-reserve-tb">上下預留(mm)</label><input type="number" class="reserve-tb" value="0" oninput="updateWindowLiveBox(this.closest('.window-item'));autoSaveDraft()"></div>
+              <div class="simple-hide open-type-wrapper" style="flex: 1 1 0%; min-width: 90px; display: block;"><label class="lbl-win-open">開關方式</label><select class="open-type"><option value="double">雙開</option><option value="single">單開</option></select></div>
+            </div>
+            <div class="win-flex-row">
+              <div style="flex:2;min-width:160px;"><label class="lbl-win-layer">款式物料</label><select class="layer-type" onchange="handleLayerChange(this);if($('resultBox').style.display==='block')calculateAll();autoSaveDraft()"><option value="both">布+紗</option><option value="double_blackout">雙層遮光布</option><option value="triple">布+紗+遮光</option><option value="curtain">淨布簾</option><option value="sheer">淨窗紗</option><option value="track_only">淨路軌</option><option value="rateS">S級</option><option value="rateA">A級</option><option value="rateB">B級</option><option value="rateC">C級</option><option value="rateD">D級</option><option value="sq_blinds">百葉簾</option><option value="sq_honey">風琴簾</option><option value="sq_zebra">斑馬簾</option><option value="sq_roman">羅馬簾</option><option value="sq_roller">捲簾</option><option value="sq_mosquito">防蚊網</option><option value="sq_other">其他平方呎</option></select></div>
+              <div class="custom-price-field" style="display:none;flex:1.3;min-width:110px;"><label class="lbl-sq-price">單價 (sq/ft)</label><input type="number" class="custom-rate" placeholder="自訂" oninput="updateWindowLiveBox(this.closest('.window-item'));if($('resultBox').style.display==='block')calculateAll();autoSaveDraft()"><div class="mosq-mesh-wrap" style="display:none;margin-top:6px;"><label class="lbl-mesh-type">蚊網目數</label><select class="mosq-mesh" onchange="updateWindowLiveBox(this.closest('.window-item'));autoSaveDraft()"><option value="18">18目</option><option value="20">20目</option><option value="24">24目</option><option value="30">30目</option><option value="40">40目</option><option value="diamond">金剛網</option></select></div></div>
+              <div style="flex:3;min-width:160px;" class="simple-hide"><label class="lbl-win-rem">備註</label><input type="text" class="window-rem" placeholder="例如: #2103 或 半腰窗" oninput="autoSaveDraft()"></div>
+            </div>
+            <div class="win-sub-box simple-hide">
+              <div class="track-item" style="flex: 1 1 0%; min-width: 90px; display: block;"><label class="lbl-win-m-qty">手動路軌</label><select class="manual-qty" onchange="handleTrackQtyChange(this);if($('resultBox').style.display==='block')calculateAll();autoSaveDraft()"><option value="0">0</option><option value="1" selected="">1 支</option><option value="2">2 支</option><option value="3">3 支</option><option value="4">4 支</option><option value="5">5 支</option></select></div>
+              <div class="track-item" style="flex: 1 1 0%; min-width: 90px; display: block;"><label class="lbl-win-e-qty">電動路軌</label><select class="motor-qty" onchange="handleTrackQtyChange(this);if($('resultBox').style.display==='block')calculateAll();autoSaveDraft()"><option value="0">0</option><option value="1">1 支</option><option value="2">2 支</option><option value="3">3 支</option><option value="4">4 支</option><option value="5">5 支</option></select></div>
+              <div class="track-item" style="flex: 1.3 1 0%; min-width: 100px; display: block;"><label class="lbl-win-m-price">手動軌單價($)</label><input type="number" class="manual-price" value="180" oninput="if($('resultBox').style.display==='block')calculateAll();autoSaveDraft()"></div>
+              <div class="track-item" style="flex: 1.3 1 0%; min-width: 100px; display: block;"><label class="lbl-win-e-price">電動軌單價($)</label><input type="number" class="motor-price" value="2500" oninput="if($('resultBox').style.display==='block')calculateAll();autoSaveDraft()"></div>
+              <div class="track-item motor-power-wrapper" style="display: none; flex: 1 1 0%; min-width: 90px;"><label class="lbl-motor-power">電動供電</label><select class="motor-power" onchange="autoSaveDraft()"><option value="wired">濕電</option><option value="battery">乾電</option></select></div>
+              <div style="flex:1.2;min-width:130px;">
+                <label class="check-container" style="padding-top:0;color:#4a3326;font-size:12px;">
+                  <input type="checkbox" class="window-double-toggle" onchange="calculateAll();autoSaveDraft()">
+                  <span class="lbl-win-double-toggle">此窗雙倍計價</span>
+                </label>
+              </div>
+              <div style="flex:1;min-width:90px;display:flex;align-items:flex-end;"><button class="remove-btn" onclick="removeWindow(this)">❌ 刪除</button></div>
+            </div><div class="window-photo-box simple-hide"><div class="row" style="margin-bottom:0;"><div class="col" style="min-width:180px;"><label class="lbl-photo-site">現場照片</label><input type="file" accept="image/*" onchange="handleWindowPhotoUpload(this,'site')"></div><div class="col" style="min-width:180px;"><label class="lbl-photo-install">安裝位置照片</label><input type="file" accept="image/*" onchange="handleWindowPhotoUpload(this,'install')"></div></div><div class="window-photo-grid"></div></div><div class="window-live-box"><div><strong class="lbl-live-ft">換算尺寸</strong>: <span class="live-dim-ft">4.92 ft × 6.56 ft</span></div><div><strong class="lbl-live-area">面積</strong>: <span class="live-area">32.30 sq.ft</span></div><div><strong class="lbl-live-make">製作尺寸</strong>: <span class="live-make-size">1500 × 2000 mm</span></div><div class="window-live-pricing" style="display: none;"><strong class="lbl-live-unit">單價</strong>: <span class="live-unit-price">-</span> ｜ <strong class="lbl-live-sub">小計</strong>: <span class="live-sq-subtotal">-</span></div></div></div></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+            <button class="add-btn" id="ui-btn-addwin" onclick="addWindow()" style="flex:2;min-width:120px;">+ 新增窗戶位置</button>
+            <button class="add-btn dark" id="ui-btn-clone-window" onclick="duplicateLastWindow()" style="flex:1;min-width:100px;background:#6f5b4c;color:#fff;border-color:#6f5b4c;">📋 複製窗位</button>
+        </div>
 
         <!-- ===== 付款管理 ===== -->
         <div class="panel">
@@ -2210,13 +2381,13 @@
             <div class="receipt-config-box">
                 <div>
                     <label class="check-container" style="color:#513c2f;">
-                        <input type="checkbox" id="chkDeductMeasure" onchange="if($('resultBox').style.display==='block')calculateAll()">
+                        <input type="checkbox" id="chkDeductMeasure" onchange="if($('resultBox').style.display==='block')calculateAll();autoSaveDraft()">
                         <span id="ui-lbl-chkmeasure">已收取 $500 度尺費 (自動扣減)</span>
                     </label>
                 </div>
                 <div>
                     <label id="ui-lbl-depselect">訂金支付 (首期):</label>
-                    <select id="depositSelect" onchange="handleDepositChange()">
+                    <select id="depositSelect" onchange="handleDepositChange();autoSaveDraft()">
                         <option value="0">未付訂金</option><option value="measure_only">淨收 $500 度尺訂金</option>
                         <option value="0.5">支付 50% 訂金</option><option value="0.3">支付 30% 訂金</option>
                         <option value="custom">自訂 ($)</option>
@@ -2224,11 +2395,11 @@
                 </div>
                 <div id="customDepositWrapper" style="display:none;">
                     <label id="ui-lbl-custdep">自訂訂金 ($):</label>
-                    <input type="number" id="customDepositVal" value="0" oninput="if($('resultBox').style.display==='block')calculateAll()">
+                    <input type="number" id="customDepositVal" value="0" oninput="if($('resultBox').style.display==='block')calculateAll();autoSaveDraft()">
                 </div>
                 <div class="simple-hide">
                     <label id="ui-lbl-urgent" style="color:#d45d43;">加急/附加費 ($):</label>
-                    <input type="number" id="urgentCharge" value="0" oninput="if($('resultBox').style.display==='block')calculateAll()" placeholder="0">
+                    <input type="number" id="urgentCharge" value="0" oninput="if($('resultBox').style.display==='block')calculateAll();autoSaveDraft()" placeholder="0">
                 </div>
             </div>
         </div>
@@ -2240,7 +2411,19 @@
         <div class="panel-skeleton" id="panelRemarksSkeleton"></div>
         <div id="panelRemarks" class="panel" style="display:none;background:#fff3cd;border-color:#ffeeba;">
             <label style="color:#856404;">此備註將印於單據底部</label>
-            <textarea id="specialRemarks" rows="3" placeholder="請輸入特別條款或備註..." oninput="if($('resultBox').style.display==='block')calculateAll()"></textarea>
+            <textarea id="specialRemarks" rows="3" placeholder="請輸入特別條款或備註..." oninput="if($('resultBox').style.display==='block')calculateAll();autoSaveDraft()"></textarea>
+            <div style="margin-top:8px;">
+                <label style="font-size:12px;">快速備註模板:</label>
+                <select id="remarkTemplate" onchange="applyRemarkTemplate()" style="width:auto;padding:4px 28px 4px 8px;">
+                    <option value="">-- 選擇 --</option>
+                    <option value="半腰窗，需加橫眉">半腰窗，需加橫眉</option>
+                    <option value="落地窗，需加底軌">落地窗，需加底軌</option>
+                    <option value="L型窗，需訂製轉角">L型窗，需訂製轉角</option>
+                    <option value="窗台石突出，需預留空間">窗台石突出，需預留空間</option>
+                    <option value="高空作業，需加安全帶">高空作業，需加安全帶</option>
+                    <option value="不包清拆舊窗簾">不包清拆舊窗簾</option>
+                </select>
+            </div>
         </div>
 
         <!-- ===== 操作按鈕（無固定定位） ===== -->
@@ -2250,7 +2433,7 @@
             <button class="btn-action" id="ui-btn-measure-receipt" style="background:#b5651d;" onclick="generateDoc('measure_receipt')">📏 度尺訂金單</button>
             <button class="btn-action" id="ui-btn-invoice" style="background:#664e3f;" onclick="generateDoc('invoice')">🧾 正式單據</button>
             <button class="btn-action btn-soft-lite" id="btnToggleTools" onclick="toggleSection('panelAdvancedTools','btnToggleTools')">➕ 進階工具</button>
-            <button class="btn-action" id="ui-btn-print" style="background:#4a3f35;display:none;" onclick="window.print()">🖨️ 列印/PDF</button>
+            <button class="btn-action" id="ui-btn-print" style="background: rgb(74, 63, 53); display: inline-block;" onclick="window.print()">🖨️ 列印/PDF</button>
         </div>
 
         <!-- ===== 進階工具 ===== -->
@@ -2269,12 +2452,13 @@
                 <div class="col"><button class="btn-action btn-soft-lite" id="ui-btn-wa-copy" onclick="copyWhatsAppQuote()">📲 複製 WhatsApp 報價</button></div>
                 <div class="col"><button class="btn-action btn-soft-lite" id="ui-btn-install-copy" onclick="copyInstallSheet()">📋 複製安裝紙</button></div>
                 <div class="col"><button class="btn-action btn-soft-lite" id="ui-btn-export-csv" onclick="exportCalcCsv()">📥 匯出 CSV</button></div>
+                <div class="col"><button class="btn-action btn-soft-lite" onclick="restoreDraft()">💾 恢復草稿</button></div>
             </div>
         </div>
 
         <!-- ===== 結果區 ===== -->
-        <div class="result-box" id="resultBox">
-            <div class="pdf-type-selector">
+        <div class="result-box open" id="resultBox" style="display: block;">
+            <div class="pdf-type-selector" style="display: none;">
                 <span style="font-size:13px;color:#513c2f;font-weight:700;width:100%;" id="ui-pdf-sel-lbl">顯示模式：</span>
                 <button class="pdf-type-btn active" id="btn-pdf-cust" onclick="setPdfMode('customer')">客戶版 (隱藏地址)</button>
                 <button class="pdf-type-btn" id="btn-pdf-comp" onclick="setPdfMode('company')">公司版 (顯示地址)</button>
@@ -2283,68 +2467,93 @@
                 <div>
                     <h1 style="margin:0;font-size:26px;color:#000;"><span class="logo-m">M</span>Curtain</h1>
                     <div style="font-size:13px;margin-top:4px;color:#7f4f24;font-weight:700;" id="ui-inv-type">工程報價單</div>
-                    <div id="invoiceNoWrapper" class="inv-number-badge">---</div>
+                    <div id="invoiceNoWrapper" class="inv-number-badge">No: ---</div>
                 </div>
                 <div class="invoice-company-info">
-                    <strong>MCurtain Ltd.</strong><br>新城市中央廣場 Home Circle 811<br>Tel: (852) 2634 0689<br><span id="ui-inv-date">印單日期:</span> <span id="invDate"></span>
+                    <strong>MCurtain Ltd.</strong><br>新城市中央廣場 Home Circle 811<br>Tel: (852) 2634 0689<br><span id="ui-inv-date">印單日期:</span> <span id="invDate">2026-06-22</span>
                 </div>
             </div>
+
+            <!-- ===== 客戶資訊（每行一個，靠左對齊） ===== -->
             <div class="invoice-client-info">
-                <div class="row" style="margin-bottom:0;">
-                    <div class="col" style="flex:2;">
-                        <strong>Customer:</strong> <span id="lblClientName"></span> &nbsp;&nbsp;
-                        <span id="phoneWrapper"><strong>Tel:</strong> <span id="lblClientPhone"></span></span>
-                        <div class="company-only-field" style="margin-top:8px;color:#7f4f24;font-weight:700;font-size:13px;">
-                            <span id="ui-lbl-inv-addr">安裝地址:</span> <span id="lblInvoiceAddress"></span>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <strong>Sales:</strong> <span id="lblStaffName"></span>
-                        <div id="printDateBox" style="margin-top:8px;font-size:12px;color:#6e5d53;display:none;">
-                            <div id="printMeasureDateRow"><span id="lbl_print_mdate">度尺日期:</span> <span id="printMeasureDate"></span></div>
-                            <div id="printInstallDateRow"><span id="lbl_print_idate">預計安裝:</span> <span id="printInstallDate"></span></div>
-                        </div>
-                    </div>
+                <div class="info-line">
+                    <strong>Customer:</strong>
+                    <span class="info-value" id="lblClientName">---</span>
+                </div>
+                <div class="info-line" id="phoneWrapperLine" style="display: block;">
+                    <strong>Tel:</strong>
+                    <span class="info-value" id="lblClientPhone">---</span>
+                </div>
+                <div class="info-line info-line-addr company-only-field" id="addrLineWrapper" style="display: block;">
+                    <strong>Address:</strong>
+                    <span class="info-value" id="lblInvoiceAddress">---</span>
+                </div>
+                <div class="info-line">
+                    <strong>Sales:</strong>
+                    <span class="info-value" id="lblStaffName">Emily</span>
+                </div>
+                <div id="printDateBox" style="margin-top:8px;font-size:12px;color:#6e5d53;display:none;padding-left:72px;">
+                    <div id="printMeasureDateRow"><span id="lbl_print_mdate">度尺日期:</span> <span id="printMeasureDate"></span></div>
+                    <div id="printInstallDateRow"><span id="lbl_print_idate">預計安裝:</span> <span id="printInstallDate"></span></div>
                 </div>
             </div>
-            <div id="measureReceiptOnlyItem"></div>
-            <div class="table-responsive">
+
+            <div id="measureReceiptOnlyItem" style="display: none;">上門度尺費 (On-site Measurement Fee): HK$500</div>
+            <div class="table-responsive" style="display: block;">
                 <table>
                     <thead><tr><th id="th-item">位置</th><th id="th-size">尺寸</th><th id="th-ft">呎數</th><th id="th-type">款式</th><th id="th-open" class="simple-hide">開關</th><th id="th-motor" class="simple-hide">路軌</th><th id="th-rem" class="simple-hide">備註</th><th id="th-sub">小計</th></tr></thead>
-                    <tbody id="reportTableBody"></tbody>
+                    <tbody id="reportTableBody"><tr><td><strong>客廳</strong></td><td>1500mm (闊)</td><td>5 呎</td><td>布+紗</td><td class="simple-hide">雙開</td><td class="simple-hide">手動x2</td><td class="simple-hide">-</td><td>HK$4110</td></tr></tbody>
                 </table>
             </div>
             <div class="summary-wrapper" id="mainSummaryWrapper">
-                <div class="summary-item"><span id="ui-sum-sub">小計:</span><span id="subTotalText">HK$0</span></div>
-                <div class="summary-item simple-hide" id="summaryInstRow"><span id="ui-sum-inst">安裝費:</span><span id="installTotalText">HK$0</span></div>
+                <div class="summary-item"><span id="ui-sum-sub">小計:</span><span id="subTotalText">HK$4110</span></div>
+                <div class="summary-item simple-hide" id="summaryInstRow" style="display: flex;"><span id="ui-sum-inst">安裝費:</span><span id="installTotalText">HK$500</span></div>
                 <div class="summary-item simple-hide" id="summaryUrgentRow" style="display:none;color:#d45d43;"><span id="ui-sum-urgent">附加費:</span><span id="urgentTotalText">HK$0</span></div>
-                <div class="summary-item" id="summaryDiscRow">
+                <div class="summary-item" id="summaryDiscRow" style="display: flex;">
                     <span id="ui-sum-disc">折扣:</span>
-                    <select id="discountSelect" onchange="applyDiscount()" style="width:auto;padding:4px 28px 4px 8px;">
+                    <select id="discountSelect" onchange="applyDiscount();autoSaveDraft()" style="width:auto;padding:4px 28px 4px 8px;">
                         <option value="1.0">原價</option>
-                        <script>for(let i=95;i>=50;i-=5)document.write(`<option value="${i/100}">${i}% (${i/10}折)</option>`);</script>
+                        <script>for(let i=95;i>=50;i-=5)document.write(`<option value="${i/100}">${i}% (${i/10}折)</option>`);</script><option value="0.95">95% (9.5折)</option><option value="0.9">90% (9折)</option><option value="0.85">85% (8.5折)</option><option value="0.8">80% (8折)</option><option value="0.75">75% (7.5折)</option><option value="0.7">70% (7折)</option><option value="0.65">65% (6.5折)</option><option value="0.6">60% (6折)</option><option value="0.55">55% (5.5折)</option><option value="0.5">50% (5折)</option><option value="0.95">95% (9.5折)</option><option value="0.9">90% (9折)</option><option value="0.85">85% (8.5折)</option><option value="0.8">80% (8折)</option><option value="0.75">75% (7.5折)</option><option value="0.7">70% (7折)</option><option value="0.65">65% (6.5折)</option><option value="0.6">60% (6折)</option><option value="0.55">55% (5.5折)</option><option value="0.5">50% (5折)</option>
                     </select>
-                    <span id="lblDiscountText">-</span>
+                    <span id="lblDiscountText" style="display: inline;">-HK$206</span>
                 </div>
-                <div class="summary-item" id="summaryMeasureDeductRow" style="display:none;color:#b5651d;font-weight:700;"><span id="ui-sum-measure-deduct">扣除預收度尺費:</span><span>-HK$500</span></div>
-                <div class="summary-item grand-total"><span id="ui-sum-grand">最終總價:</span><span id="grandTotalText">HK$0</span></div>
-                <div class="summary-item receipt-highlight" id="summaryDepRow"><span id="ui-sum-dep-paid">已付訂金 (首期):</span><span id="depositPaidText">HK$0</span><span id="lblDepositPrintText" style="display:none;font-weight:700;">HK$0</span></div>
-                <div class="summary-item balance-highlight" id="summaryBalRow"><span id="ui-sum-balance">尚欠尾款:</span><span id="balanceDueText">HK$0</span></div>
+                <div class="summary-item" id="summaryMeasureDeductRow" style="display: flex; color: rgb(181, 101, 29); font-weight: 700;"><span id="ui-sum-measure-deduct">扣除預收度尺費:</span><span>-HK$500</span></div>
+                <div class="summary-item grand-total"><span id="ui-sum-grand">最終總價:</span><span id="grandTotalText">HK$3905</span></div>
+                <!-- 訂金行：正式單據 / 度尺訂金單 時顯示 -->
+                <div class="summary-item receipt-highlight" id="summaryDepRow" style="display: none;">
+                    <span id="ui-sum-dep-paid">已付訂金 (首期):</span>
+                    <span id="depositPaidText">HK$1172</span>
+                    <span id="lblDepositPrintText" style="display:none;font-weight:700;">HK$1172</span>
+                </div>
+                <!-- 尾款行：正式單據 時顯示，餘額為 0 時自動隱藏 -->
+                <div class="summary-item balance-highlight" id="summaryBalRow" style="display: none;">
+                    <span id="ui-sum-balance">尚欠尾款:</span>
+                    <span id="balanceDueText">HK$2733</span>
+                </div>
             </div>
-            <div id="quoteDisclaimer" style="margin-top:20px;padding:12px;background:#fff3cd;color:#856404;border:1px solid #ffeeba;border-radius:var(--radius-sm);font-weight:700;text-align:center;font-size:13px;display:none;"></div>
+            <div id="quoteDisclaimer" style="margin-top: 20px; padding: 12px; background: rgb(255, 243, 205); color: rgb(133, 100, 4); border: 1px solid rgb(255, 238, 186); border-radius: var(--radius-sm); font-weight: 700; text-align: center; font-size: 13px; display: block;">⚠️ 此為初步問價參考，最終以實際度尺為準。</div>
             <div id="printSpecialRemarksBox" style="display:none;margin-top:16px;padding:12px;border:1px solid #513c2f;border-radius:var(--radius-sm);background:#faf7f2;">
                 <strong style="color:#513c2f;font-size:13px;" id="ui-print-rem-title">⚠️ 特別備註:</strong>
                 <div id="printSpecialRemarksText" style="margin-top:6px;font-size:13px;color:#4a3f35;white-space:pre-wrap;"></div>
             </div>
-            <div class="signature-section" style="display:none;">
+            <div class="signature-section" style="display: none;">
                 <div class="sig-box"><div class="sig-line"></div><p style="font-size:12px;color:#513c2f;font-weight:700;margin-top:8px;" id="ui-sig-client">客戶簽名確認</p></div>
                 <div class="sig-box"><div class="sig-line"></div><p style="font-size:12px;color:#513c2f;font-weight:700;margin-top:8px;" id="ui-sig-comp">公司蓋印及經手人</p></div>
             </div>
             <div class="invoice-footer">
                 <span id="ui-ft-1">報價包含度尺及安裝。</span><br><span id="ui-ft-val">報價有效期 30 天。</span><br><span id="ui-ft-dep">確認訂單需付 50% 訂金。</span><br><br>
-                <div id="ig-promo" style="display:block;"><strong id="ui-ft-ig" style="color:#b5651d;font-size:13px;">📸 Instagram: @m.curtain.hk</strong><br></div>
+                <div id="ig-promo" style="display: block;"><strong id="ui-ft-ig" style="color:#b5651d;font-size:13px;">📸 Instagram: @m.curtain.hk</strong><br></div>
                 <strong id="ui-ft-tech" style="display:inline-block;margin-top:4px;">技術查詢及售後支援</strong><br><strong id="ui-ft-2">Tel/WhatsApp: (852) 61206498</strong>
             </div>
+        </div>
+    </div>
+
+    <!-- ===== 客戶歷史訂單彈窗 ===== -->
+    <div class="modal-overlay" id="historyModal">
+        <div class="modal-box">
+            <button class="close-btn" onclick="closeHistoryModal()">✕</button>
+            <h3 id="historyModalTitle">客戶歷史訂單</h3>
+            <ul class="history-list" id="historyList"></ul>
         </div>
     </div>
 
@@ -2378,7 +2587,7 @@
                 ft_val: "報價有效期 30 天。", ft_dep: "確認訂單需付 50% 訂金。",
                 pdf_sel: "顯示模式：", pdf_cust: "客戶版 (隱藏地址)", pdf_comp: "公司版 (顯示地址)",
                 inv_date: "印單日期:", lbl_m_date: "度尺日期:", lbl_i_date: "預計安裝:",
-                inv_addr: "安裝地址:", sig_client: "客戶簽名確認",
+                inv_addr: "Address", sig_client: "客戶簽名確認",
                 sig_comp: "公司蓋印及經手人",
                 mode_w: "橫呎", mode_a: "平方呎",
                 living: "客廳", dining: "飯廳", master: "主人房", bed: "睡房", study: "書房",
@@ -2493,7 +2702,7 @@
                 ft_val: "报价有效期 30 天。", ft_dep: "确认订单需付 50% 订金。",
                 pdf_sel: "显示模式：", pdf_cust: "客户版 (隐藏地址)", pdf_comp: "公司版 (显示地址)",
                 inv_date: "印单日期:", lbl_m_date: "度尺日期:", lbl_i_date: "预计安装:",
-                inv_addr: "安装地址:", sig_client: "客户签名确认",
+                inv_addr: "Address", sig_client: "客户签名确认",
                 sig_comp: "公司盖印及经手人",
                 mode_w: "横呎", mode_a: "平方呎",
                 living: "客厅", dining: "饭厅", master: "主人房", bed: "睡房", study: "书房",
@@ -2611,7 +2820,7 @@
                 pdf_sel: "Display Mode:", pdf_cust: "Customer (Hide Addr)",
                 pdf_comp: "Company (Show Addr)", inv_date: "Date:",
                 lbl_m_date: "Measure Date:", lbl_i_date: "Est. Install:",
-                inv_addr: "Address:", sig_client: "Client Signature",
+                inv_addr: "Address", sig_client: "Client Signature",
                 sig_comp: "Company Chop & Sales",
                 mode_w: "Linear Ft", mode_a: "Sq.Ft",
                 living: "Living Rm", dining: "Dining Rm", master: "Master Rm",
@@ -2731,8 +2940,10 @@
         const MEDIA_DB_NAME = 'mcurtain_media_v1',
             MEDIA_DB_STORE = 'window_photos';
         const configKeys = ['staffName', 'rateCurtainFixed', 'rateSheerFixed', 'rateBlackout', 'installBase',
-            'rateS', 'rateA', 'rateB', 'rateC', 'rateD', 'rateMosq', 'rateManualTrack', 'rateMotorTrack'
+            'rateS', 'rateA', 'rateB', 'rateC', 'rateD', 'rateMosq', 'rateManualTrack', 'rateMotorTrack',
+            'minSqMosquito', 'minSqOther'
         ];
+        const DRAFT_KEY = 'mcurtain_draft_v1';
 
         function $(id) { return document.getElementById(id); }
 
@@ -2775,6 +2986,77 @@
 
         function normalizePhone(p) { return String(p || '').replace(/\D+/g, ''); }
 
+        // ===== 自動儲存草稿 =====
+        function autoSaveDraft() {
+            try {
+                const draft = {
+                    custName: $('custName').value,
+                    custTitle: $('custTitle').value,
+                    custPhone: $('custPhone').value,
+                    quoteNo: $('quoteNo').value,
+                    addrEstate: $('addrEstate').value,
+                    addrBlock: $('addrBlock').value,
+                    addrFloor: $('addrFloor').value,
+                    addrUnit: $('addrUnit').value,
+                    measureDate: $('measureDate').value,
+                    measureStartTime: $('measureStartTime').value,
+                    measureEndTime: $('measureEndTime').value,
+                    installDate: $('installDate').value,
+                    urgentCharge: $('urgentCharge').value,
+                    chkDeductMeasure: $('chkDeductMeasure').checked,
+                    depositSelect: $('depositSelect').value,
+                    customDepositVal: $('customDepositVal').value,
+                    discountSelect: $('discountSelect').value,
+                    specialRemarks: $('specialRemarks').value,
+                    staffName: $('staffName').value,
+                    windows: Array.from(document.querySelectorAll('.window-item')).map(w => captureWindowState(w)),
+                    updatedAt: Date.now()
+                };
+                localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+            } catch (e) { /* ignore */ }
+        }
+
+        function restoreDraft() {
+            try {
+                const raw = localStorage.getItem(DRAFT_KEY);
+                if (!raw) { pushHint('沒有找到草稿'); return; }
+                const draft = JSON.parse(raw);
+                if (!draft) { pushHint('草稿無效'); return; }
+                if (draft.custName !== undefined) $('custName').value = draft.custName;
+                if (draft.custTitle !== undefined) $('custTitle').value = draft.custTitle;
+                if (draft.custPhone !== undefined) $('custPhone').value = draft.custPhone;
+                if (draft.quoteNo !== undefined) $('quoteNo').value = draft.quoteNo;
+                if (draft.addrEstate !== undefined) $('addrEstate').value = draft.addrEstate;
+                if (draft.addrBlock !== undefined) $('addrBlock').value = draft.addrBlock;
+                if (draft.addrFloor !== undefined) $('addrFloor').value = draft.addrFloor;
+                if (draft.addrUnit !== undefined) $('addrUnit').value = draft.addrUnit;
+                if (draft.measureDate !== undefined) $('measureDate').value = draft.measureDate;
+                if (draft.measureStartTime !== undefined) $('measureStartTime').value = draft.measureStartTime;
+                if (draft.measureEndTime !== undefined) $('measureEndTime').value = draft.measureEndTime;
+                if (draft.installDate !== undefined) $('installDate').value = draft.installDate;
+                if (draft.urgentCharge !== undefined) $('urgentCharge').value = draft.urgentCharge;
+                if (draft.chkDeductMeasure !== undefined) $('chkDeductMeasure').checked = draft.chkDeductMeasure;
+                if (draft.depositSelect !== undefined) $('depositSelect').value = draft.depositSelect;
+                if (draft.customDepositVal !== undefined) $('customDepositVal').value = draft.customDepositVal;
+                if (draft.discountSelect !== undefined) $('discountSelect').value = draft.discountSelect;
+                if (draft.specialRemarks !== undefined) $('specialRemarks').value = draft.specialRemarks;
+                if (draft.staffName !== undefined) $('staffName').value = draft.staffName;
+                handleDepositChange();
+                $('windowList').innerHTML = '';
+                if (draft.windows && draft.windows.length) {
+                    draft.windows.forEach(state => {
+                        const w = addWindow();
+                        if (w) applyWindowState(w, state);
+                    });
+                }
+                if (!document.querySelector('.window-item')) addWindow();
+                updateDocumentTitle();
+                if ($('resultBox').style.display === 'block') calculateAll();
+                updateWindowCount();
+                pushHint('草稿已恢復');
+            } catch (e) { pushHint('恢復草稿失敗'); }
+        }
+
         // ===== 儲存 =====
         function saveConfig() { configKeys.forEach(k => { localStorage.setItem('mcurtain_' + k, $(k).value); });
             scheduleCloudSync(); }
@@ -2790,7 +3072,17 @@
             renderQuoteHistorySelect();
             refreshAllShellStatus();
             if (getSyncSettings().auto && getSyncSettings().endpoint) setTimeout(() => pullQuoteBackupNow(), 600);
-            addWindow();
+            const draftRaw = localStorage.getItem(DRAFT_KEY);
+            if (draftRaw) {
+                try {
+                    const draft = JSON.parse(draftRaw);
+                    if (draft && draft.windows && draft.windows.length) {
+                        restoreDraft();
+                    }
+                } catch (e) { /* ignore */ }
+            } else {
+                addWindow();
+            }
             convertLength();
             convertArea();
             updateWindowCount();
@@ -2917,6 +3209,7 @@
             $('custSuggestList').classList.remove('active');
             updateDocumentTitle();
             pushHint(dict[currentLang].customer_autofill || '已選取客戶資料');
+            autoSaveDraft();
         }
 
         document.addEventListener('click', function(e) {
@@ -2926,6 +3219,46 @@
                 if (list) list.classList.remove('active');
             }
         });
+
+        // ===== 客戶歷史訂單 =====
+        function showCustomerHistory() {
+            const name = $('custName').value.trim();
+            const phone = normalizePhone($('custPhone').value);
+            if (!name && !phone) { pushHint('請輸入客戶姓名或電話'); return; }
+            const history = getQuoteHistory();
+            const matched = history.filter(r => {
+                const c = r.customer || '';
+                const p = r.phone || '';
+                return (name && c.includes(name)) || (phone && p.includes(phone));
+            });
+            if (!matched.length) { pushHint('找不到該客戶的歷史訂單'); return; }
+            const modal = $('historyModal');
+            const list = $('historyList');
+            list.innerHTML = '';
+            matched.forEach(r => {
+                const li = document.createElement('li');
+                li.textContent = `${r.key} - ${r.customer} (${r.phone}) ${new Date(r.updatedAt).toLocaleString()}`;
+                li.onclick = function() {
+                    closeHistoryModal();
+                    loadQuoteByKey(r.key);
+                };
+                list.appendChild(li);
+            });
+            $('historyModalTitle').textContent = `客戶 ${name||phone} 的歷史訂單 (${matched.length}筆)`;
+            modal.classList.add('open');
+        }
+
+        function closeHistoryModal() {
+            $('historyModal').classList.remove('open');
+        }
+
+        async function loadQuoteByKey(key) {
+            const record = getQuoteHistory().find(r => r.key === key);
+            if (!record || !record.snapshot) { pushHint('無法載入該單據'); return; }
+            await applyQuoteSnapshot(record.snapshot);
+            renderQuoteHistorySelect(key);
+            pushHint('已載入訂單: ' + key);
+        }
 
         // ===== 歷史 =====
         function getQuoteHistory() { try { const raw = localStorage.getItem(QUOTE_HISTORY_KEY); return Array.isArray(raw ?
@@ -3110,6 +3443,7 @@
             updateDocumentTitle();
             calculateAll();
             updateWindowCount();
+            autoSaveDraft();
         }
 
         async function saveCurrentQuoteRecord() {
@@ -3280,6 +3614,63 @@
             pushHint((dict[currentLang].template_applied || '已套用') + ': ' + label);
             winItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
             updateWindowCount();
+            autoSaveDraft();
+        }
+
+        // ===== 複製窗位 (合併功能) =====
+        function duplicateLastWindow() {
+            const windows = document.querySelectorAll('.window-item');
+            if (!windows.length) { addWindow(); return; }
+            const source = windows[windows.length - 1];
+            const clone = addWindow();
+            if (!clone) return;
+            const copyVal = (sel, val) => { const el = clone.querySelector(sel); if (el) el.value = val; };
+            copyVal('.room-type', source.querySelector('.room-type')?.value || 'living');
+            copyVal('.room-num', source.querySelector('.room-num')?.value || '');
+            copyVal('.item-unit', source.querySelector('.item-unit')?.value || 'mm');
+            copyVal('.window-width', source.querySelector('.window-width')?.value || '1500');
+            copyVal('.window-height', source.querySelector('.window-height')?.value || '2000');
+            copyVal('.reserve-lr', source.querySelector('.reserve-lr')?.value || '0');
+            copyVal('.reserve-tb', source.querySelector('.reserve-tb')?.value || '0');
+            copyVal('.open-type', source.querySelector('.open-type')?.value || 'double');
+            copyVal('.layer-type', source.querySelector('.layer-type')?.value || 'both');
+            copyVal('.custom-rate', source.querySelector('.custom-rate')?.value || '');
+            copyVal('.mosq-mesh', source.querySelector('.mosq-mesh')?.value || '18');
+            copyVal('.window-rem', source.querySelector('.window-rem')?.value || '');
+            copyVal('.manual-qty', source.querySelector('.manual-qty')?.value || '0');
+            copyVal('.motor-qty', source.querySelector('.motor-qty')?.value || '0');
+            copyVal('.manual-price', source.querySelector('.manual-price')?.value || (parseFloat($('rateManualTrack')
+                ?.value) || 180));
+            copyVal('.motor-price', source.querySelector('.motor-price')?.value || (parseFloat($('rateMotorTrack')
+                ?.value) || 2500));
+            copyVal('.motor-power', source.querySelector('.motor-power')?.value || 'wired');
+            const srcDouble = source.querySelector('.window-double-toggle')?.checked || false;
+            const dstDouble = clone.querySelector('.window-double-toggle');
+            if (dstDouble) dstDouble.checked = srcDouble;
+            handleLayerChange(clone.querySelector('.layer-type'));
+            handleTrackQtyChange(clone.querySelector('.manual-qty'));
+            handleTrackQtyChange(clone.querySelector('.motor-qty'));
+            updateWindowLiveBox(clone);
+            const sourceId = source.dataset.windowId,
+                cloneId = clone.dataset.windowId;
+            if (sourceId && cloneId) {
+                dbGetWindowPhotos(sourceId).then(photos => {
+                    if (photos && photos.length) {
+                        dbUpsertWindowPhotos(cloneId, photos.map(p => ({ ...p })));
+                        setTimeout(() => loadWindowPhotosToGrid(clone), 0);
+                    }
+                });
+            }
+            if ($('resultBox').style.display === 'block') calculateAll();
+            clone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            clone.style.borderColor = '#b5651d';
+            clone.style.transition = 'border-color 0.3s';
+            setTimeout(() => {
+                clone.style.borderColor = '#ebdcd3';
+            }, 1200);
+            updateWindowCount();
+            autoSaveDraft();
+            pushHint('窗位已複製');
         }
 
         // ===== 雲端同步 =====
@@ -3515,6 +3906,7 @@
             if (!$('addrUnit').value) $('addrUnit').value = d.addrUnit || '';
             if (showHint) pushHint(dict[currentLang].customer_autofill);
             updateDocumentTitle();
+            autoSaveDraft();
         }
 
         function saveCustomerProfile() {
@@ -3558,7 +3950,9 @@
                 mosqRate: parseFloat($('rateMosq').value) || 40,
                 rates: { rateS: parseFloat($('rateS').value) || 0, rateA: parseFloat($('rateA').value) || 0,
                     rateB: parseFloat($('rateB').value) || 0, rateC: parseFloat($('rateC').value) || 0,
-                    rateD: parseFloat($('rateD').value) || 0 }
+                    rateD: parseFloat($('rateD').value) || 0 },
+                minSqMosquito: parseFloat($('minSqMosquito').value) || 10,
+                minSqOther: parseFloat($('minSqOther').value) || 15
             };
         }
 
@@ -3574,11 +3968,17 @@
             const isWindowDouble = item.querySelector('.window-double-toggle')?.checked || false;
             const wf = unitToFeet(w, u),
                 hf = unitToFeet(h, u);
-            const linearFt = roundUpTenth(wf),
-                areaSqFt = roundUpTenth(wf * hf);
+            const linearFt = roundUpTenth(wf);
+            let areaSqFt = roundUpTenth(wf * hf);
             const isSq = l.startsWith('sq_');
             let baseRate = 0,
                 baseCost = 0;
+            let effectiveArea = areaSqFt;
+            if (isSq) {
+                let minSq = ctx.minSqOther;
+                if (l === 'sq_mosquito') minSq = ctx.minSqMosquito;
+                effectiveArea = Math.max(areaSqFt, minSq);
+            }
             if (!isSq && l !== 'track_only') {
                 if (l === 'both') baseRate = ctx.cfRate + ctx.sfRate;
                 else if (l === 'double_blackout') baseRate = ctx.cfRate + ctx.blkRate;
@@ -3592,7 +3992,7 @@
                 const custom = item.querySelector('.custom-rate')?.value;
                 const cr = custom !== '' ? parseFloat(custom) : null;
                 baseRate = cr !== null && !isNaN(cr) ? cr : (l === 'sq_mosquito' ? ctx.mosqRate : 60);
-                baseCost = Math.round(areaSqFt * baseRate);
+                baseCost = Math.round(effectiveArea * baseRate);
             }
             const isOverHeight = (u === 'mm' && h > 2800) || (u === 'cm' && h > 280) || (u === 'm' && h > 2.8) || (u ===
                 'inch' && h > 110) || (u === 'ft' && h > 9.2) || (u === 'yd' && h > 3.1);
@@ -3603,17 +4003,19 @@
             const lineTotal = productCost + tracksCost;
             const sizeText = isSq ? `${w} x ${h} ${u}` : `${w}${u} (${d.width_label})`;
             const ftText = isSq ? `${areaSqFt} ${d.unit_sqft}` : `${linearFt} ${d.unit_ft}`;
-            const baseFormula = isSq ? `${areaSqFt} x ${baseRate}` : `${linearFt} x ${baseRate}`;
+            const baseFormula = isSq ? `${effectiveArea} x ${baseRate}` : `${linearFt} x ${baseRate}`;
             const tags = [];
             if (isOverHeight) tags.push('height>2.8m x2');
             if (isWindowDouble) tags.push('window2x');
+            if (isSq && effectiveArea > areaSqFt) tags.push(`最低${effectiveArea}sqft`);
             const suffix = tags.length ? ` (${tags.join(', ')})` : '';
             const formulaText = `${baseFormula}${suffix} + (${mQty}x${mPrice} + ${eQty}x${ePrice})`;
             const detailLabel = isSq ? 'sqft' : 'linearft';
             const detailQty = isSq ? areaSqFt : linearFt;
             const formulaDetail =
-                `${detailLabel}=${detailQty}, base=${baseRate}, baseCost=${baseCost}, overHeight=${isOverHeight?'Y':'N'}, window2x=${isWindowDouble?'Y':'N'}, product=${productCost}, tracks=(${mQty}x${mPrice})+(${eQty}x${ePrice}), total=${lineTotal}`;
-            return { w, h, u, l, isSq, linearFt, areaSqFt, baseRate, baseCost, productCost, tracksCost, lineTotal,
+                `${detailLabel}=${detailQty}, effective=${isSq?effectiveArea:linearFt}, base=${baseRate}, baseCost=${baseCost}, overHeight=${isOverHeight?'Y':'N'}, window2x=${isWindowDouble?'Y':'N'}, product=${productCost}, tracks=(${mQty}x${mPrice})+(${eQty}x${ePrice}), total=${lineTotal}`;
+            return { w, h, u, l, isSq, linearFt, areaSqFt, effectiveArea, baseRate, baseCost, productCost, tracksCost,
+                lineTotal,
                 isOverHeight, isWindowDouble, sizeText, ftText, formulaText, formulaDetail };
         }
 
@@ -3663,26 +4065,26 @@
               <div style="flex:1.5;min-width:90px;"><label class="lbl-win-pos">${d.pos}</label><select class="room-type"><option value="living">${d.living}</option><option value="dining">${d.dining}</option><option value="master">${d.master}</option><option value="bed">${d.bed}</option><option value="study">${d.study}</option><option value="maid">${d.maid}</option><option value="toilet">${d.toilet}</option><option value="kitchen">${d.kitchen}</option><option value="other">${d.other}</option></select></div>
               <div style="flex:0.8;min-width:60px;"><label class="lbl-win-num">${d.num}</label><select class="room-num"><option value="">${d.none}</option>${Array.from({length:10},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join('')}</select></div>
               <div style="flex:1.2;min-width:100px;"><label class="lbl-win-unit">${d.unit_label}</label><select class="item-unit" onchange="updateWindowLiveBox(this.closest('.window-item'));if($('resultBox').style.display==='block')calculateAll();"><option value="mm">${d.unit_mm}</option><option value="cm">${d.unit_cm}</option><option value="m">${d.unit_m}</option><option value="inch">${d.unit_inch}</option><option value="ft">${d.unit_ft_display}</option><option value="yd">${d.unit_yd||'碼'}</option></select></div>
-              <div style="flex:1;min-width:80px;"><label class="lbl-win-w">${d.width}</label><input type="number" class="window-width" value="1500" oninput="updateWindowLiveBox(this.closest('.window-item'));if($('resultBox').style.display==='block')calculateAll();"></div>
-              <div style="flex:1;min-width:80px;"><label class="lbl-win-h">${d.height}</label><input type="number" class="window-height" value="2000" oninput="updateWindowLiveBox(this.closest('.window-item'));if($('resultBox').style.display==='block')calculateAll();"></div>
-              <div style="flex:1;min-width:90px;" class="simple-hide"><label class="lbl-reserve-lr">${d.reserve_lr}</label><input type="number" class="reserve-lr" value="0" oninput="updateWindowLiveBox(this.closest('.window-item'))"></div>
-              <div style="flex:1;min-width:90px;" class="simple-hide"><label class="lbl-reserve-tb">${d.reserve_tb}</label><input type="number" class="reserve-tb" value="0" oninput="updateWindowLiveBox(this.closest('.window-item'))"></div>
+              <div style="flex:1;min-width:80px;"><label class="lbl-win-w">${d.width}</label><input type="number" class="window-width" value="1500" oninput="updateWindowLiveBox(this.closest('.window-item'));if($('resultBox').style.display==='block')calculateAll();autoSaveDraft()"></div>
+              <div style="flex:1;min-width:80px;"><label class="lbl-win-h">${d.height}</label><input type="number" class="window-height" value="2000" oninput="updateWindowLiveBox(this.closest('.window-item'));if($('resultBox').style.display==='block')calculateAll();autoSaveDraft()"></div>
+              <div style="flex:1;min-width:90px;" class="simple-hide"><label class="lbl-reserve-lr">${d.reserve_lr}</label><input type="number" class="reserve-lr" value="0" oninput="updateWindowLiveBox(this.closest('.window-item'));autoSaveDraft()"></div>
+              <div style="flex:1;min-width:90px;" class="simple-hide"><label class="lbl-reserve-tb">${d.reserve_tb}</label><input type="number" class="reserve-tb" value="0" oninput="updateWindowLiveBox(this.closest('.window-item'));autoSaveDraft()"></div>
               <div class="simple-hide open-type-wrapper" style="flex:1;min-width:90px;"><label class="lbl-win-open">${d.opening}</label><select class="open-type"><option value="double">${d.double}</option><option value="single">${d.single}</option></select></div>
             </div>
             <div class="win-flex-row">
-              <div style="flex:2;min-width:160px;"><label class="lbl-win-layer">${d.layer}</label><select class="layer-type" onchange="handleLayerChange(this);if($('resultBox').style.display==='block')calculateAll();"><option value="both">${d.both}</option><option value="double_blackout">${d.double_blackout}</option><option value="triple">${d.triple}</option><option value="curtain">${d.curtain}</option><option value="sheer">${d.sheer}</option><option value="track_only">${d.track_only}</option><option value="rateS">${d.rateS}</option><option value="rateA">${d.rateA}</option><option value="rateB">${d.rateB}</option><option value="rateC">${d.rateC}</option><option value="rateD">${d.rateD}</option><option value="sq_blinds">${d.sq_blinds}</option><option value="sq_honey">${d.sq_honey}</option><option value="sq_zebra">${d.sq_zebra}</option><option value="sq_roman">${d.sq_roman}</option><option value="sq_roller">${d.sq_roller}</option><option value="sq_mosquito">${d.sq_mosquito}</option><option value="sq_other">${d.sq_other}</option></select></div>
-              <div class="custom-price-field" style="display:none;flex:1.3;min-width:110px;"><label class="lbl-sq-price">${d.lbl_sq_price}</label><input type="number" class="custom-rate" placeholder="${d.custom_rate_placeholder}" oninput="updateWindowLiveBox(this.closest('.window-item'));if($('resultBox').style.display==='block')calculateAll();"><div class="mosq-mesh-wrap" style="display:none;margin-top:6px;"><label class="lbl-mesh-type">${d.mesh_label}</label><select class="mosq-mesh" onchange="updateWindowLiveBox(this.closest('.window-item'))"><option value="18">${d.mesh_18}</option><option value="20">${d.mesh_20}</option><option value="24">${d.mesh_24}</option><option value="30">${d.mesh_30}</option><option value="40">${d.mesh_40}</option><option value="diamond">${d.mesh_diamond}</option></select></div></div>
-              <div style="flex:3;min-width:160px;" class="simple-hide"><label class="lbl-win-rem">${d.rem}</label><input type="text" class="window-rem" placeholder="${d.ph_win_rem}"></div>
+              <div style="flex:2;min-width:160px;"><label class="lbl-win-layer">${d.layer}</label><select class="layer-type" onchange="handleLayerChange(this);if($('resultBox').style.display==='block')calculateAll();autoSaveDraft()"><option value="both">${d.both}</option><option value="double_blackout">${d.double_blackout}</option><option value="triple">${d.triple}</option><option value="curtain">${d.curtain}</option><option value="sheer">${d.sheer}</option><option value="track_only">${d.track_only}</option><option value="rateS">${d.rateS}</option><option value="rateA">${d.rateA}</option><option value="rateB">${d.rateB}</option><option value="rateC">${d.rateC}</option><option value="rateD">${d.rateD}</option><option value="sq_blinds">${d.sq_blinds}</option><option value="sq_honey">${d.sq_honey}</option><option value="sq_zebra">${d.sq_zebra}</option><option value="sq_roman">${d.sq_roman}</option><option value="sq_roller">${d.sq_roller}</option><option value="sq_mosquito">${d.sq_mosquito}</option><option value="sq_other">${d.sq_other}</option></select></div>
+              <div class="custom-price-field" style="display:none;flex:1.3;min-width:110px;"><label class="lbl-sq-price">${d.lbl_sq_price}</label><input type="number" class="custom-rate" placeholder="${d.custom_rate_placeholder}" oninput="updateWindowLiveBox(this.closest('.window-item'));if($('resultBox').style.display==='block')calculateAll();autoSaveDraft()"><div class="mosq-mesh-wrap" style="display:none;margin-top:6px;"><label class="lbl-mesh-type">${d.mesh_label}</label><select class="mosq-mesh" onchange="updateWindowLiveBox(this.closest('.window-item'));autoSaveDraft()"><option value="18">${d.mesh_18}</option><option value="20">${d.mesh_20}</option><option value="24">${d.mesh_24}</option><option value="30">${d.mesh_30}</option><option value="40">${d.mesh_40}</option><option value="diamond">${d.mesh_diamond}</option></select></div></div>
+              <div style="flex:3;min-width:160px;" class="simple-hide"><label class="lbl-win-rem">${d.rem}</label><input type="text" class="window-rem" placeholder="${d.ph_win_rem}" oninput="autoSaveDraft()"></div>
             </div>
             <div class="win-sub-box simple-hide">
-              <div class="track-item" style="flex:1;min-width:90px;"><label class="lbl-win-m-qty">${d.m_track}</label><select class="manual-qty" onchange="handleTrackQtyChange(this);if($('resultBox').style.display==='block')calculateAll();"><option value="0">0</option><option value="1" selected>1 ${d.rails}</option><option value="2">2 ${d.rails}</option><option value="3">3 ${d.rails}</option><option value="4">4 ${d.rails}</option><option value="5">5 ${d.rails}</option></select></div>
-              <div class="track-item" style="flex:1;min-width:90px;"><label class="lbl-win-e-qty">${d.e_track}</label><select class="motor-qty" onchange="handleTrackQtyChange(this);if($('resultBox').style.display==='block')calculateAll();"><option value="0">0</option><option value="1">1 ${d.rails}</option><option value="2">2 ${d.rails}</option><option value="3">3 ${d.rails}</option><option value="4">4 ${d.rails}</option><option value="5">5 ${d.rails}</option></select></div>
-              <div class="track-item" style="flex:1.3;min-width:100px;"><label class="lbl-win-m-price">${d.lbl_manual_price}</label><input type="number" class="manual-price" value="${defaultManual}" oninput="if($('resultBox').style.display==='block')calculateAll();"></div>
-              <div class="track-item" style="flex:1.3;min-width:100px;"><label class="lbl-win-e-price">${d.lbl_motor_price}</label><input type="number" class="motor-price" value="${defaultMotor}" oninput="if($('resultBox').style.display==='block')calculateAll();"></div>
-              <div class="track-item motor-power-wrapper" style="display:none;flex:1;min-width:90px;"><label class="lbl-motor-power">${d.lbl_motor_power}</label><select class="motor-power"><option value="wired">${d.wired}</option><option value="battery">${d.battery}</option></select></div>
+              <div class="track-item" style="flex:1;min-width:90px;"><label class="lbl-win-m-qty">${d.m_track}</label><select class="manual-qty" onchange="handleTrackQtyChange(this);if($('resultBox').style.display==='block')calculateAll();autoSaveDraft()"><option value="0">0</option><option value="1" selected>1 ${d.rails}</option><option value="2">2 ${d.rails}</option><option value="3">3 ${d.rails}</option><option value="4">4 ${d.rails}</option><option value="5">5 ${d.rails}</option></select></div>
+              <div class="track-item" style="flex:1;min-width:90px;"><label class="lbl-win-e-qty">${d.e_track}</label><select class="motor-qty" onchange="handleTrackQtyChange(this);if($('resultBox').style.display==='block')calculateAll();autoSaveDraft()"><option value="0">0</option><option value="1">1 ${d.rails}</option><option value="2">2 ${d.rails}</option><option value="3">3 ${d.rails}</option><option value="4">4 ${d.rails}</option><option value="5">5 ${d.rails}</option></select></div>
+              <div class="track-item" style="flex:1.3;min-width:100px;"><label class="lbl-win-m-price">${d.lbl_manual_price}</label><input type="number" class="manual-price" value="${defaultManual}" oninput="if($('resultBox').style.display==='block')calculateAll();autoSaveDraft()"></div>
+              <div class="track-item" style="flex:1.3;min-width:100px;"><label class="lbl-win-e-price">${d.lbl_motor_price}</label><input type="number" class="motor-price" value="${defaultMotor}" oninput="if($('resultBox').style.display==='block')calculateAll();autoSaveDraft()"></div>
+              <div class="track-item motor-power-wrapper" style="display:none;flex:1;min-width:90px;"><label class="lbl-motor-power">${d.lbl_motor_power}</label><select class="motor-power" onchange="autoSaveDraft()"><option value="wired">${d.wired}</option><option value="battery">${d.battery}</option></select></div>
               <div style="flex:1.2;min-width:130px;">
                 <label class="check-container" style="padding-top:0;color:#4a3326;font-size:12px;">
-                  <input type="checkbox" class="window-double-toggle" onchange="calculateAll()">
+                  <input type="checkbox" class="window-double-toggle" onchange="calculateAll();autoSaveDraft()">
                   <span class="lbl-win-double-toggle">${d.window_double_price}</span>
                 </label>
               </div>
@@ -3720,6 +4122,7 @@
                 if ($('resultBox').style.display === 'block') calculateAll();
             });
             updateWindowCount();
+            autoSaveDraft();
             return win;
         }
 
@@ -3744,54 +4147,7 @@
             winItem.remove();
             if ($('resultBox').style.display === 'block') calculateAll();
             updateWindowCount();
-        }
-
-        function duplicateLastWindow() {
-            const windows = document.querySelectorAll('.window-item');
-            if (!windows.length) { addWindow(); return; }
-            const source = windows[windows.length - 1];
-            const clone = addWindow();
-            if (!clone) return;
-            const copyVal = (sel, val) => { const el = clone.querySelector(sel); if (el) el.value = val; };
-            copyVal('.room-type', source.querySelector('.room-type')?.value || 'living');
-            copyVal('.room-num', source.querySelector('.room-num')?.value || '');
-            copyVal('.item-unit', source.querySelector('.item-unit')?.value || 'mm');
-            copyVal('.window-width', source.querySelector('.window-width')?.value || '1500');
-            copyVal('.window-height', source.querySelector('.window-height')?.value || '2000');
-            copyVal('.reserve-lr', source.querySelector('.reserve-lr')?.value || '0');
-            copyVal('.reserve-tb', source.querySelector('.reserve-tb')?.value || '0');
-            copyVal('.open-type', source.querySelector('.open-type')?.value || 'double');
-            copyVal('.layer-type', source.querySelector('.layer-type')?.value || 'both');
-            copyVal('.custom-rate', source.querySelector('.custom-rate')?.value || '');
-            copyVal('.mosq-mesh', source.querySelector('.mosq-mesh')?.value || '18');
-            copyVal('.window-rem', source.querySelector('.window-rem')?.value || '');
-            copyVal('.manual-qty', source.querySelector('.manual-qty')?.value || '0');
-            copyVal('.motor-qty', source.querySelector('.motor-qty')?.value || '0');
-            copyVal('.manual-price', source.querySelector('.manual-price')?.value || (parseFloat($('rateManualTrack')
-                ?.value) || 180));
-            copyVal('.motor-price', source.querySelector('.motor-price')?.value || (parseFloat($('rateMotorTrack')
-                ?.value) || 2500));
-            copyVal('.motor-power', source.querySelector('.motor-power')?.value || 'wired');
-            const srcDouble = source.querySelector('.window-double-toggle')?.checked || false;
-            const dstDouble = clone.querySelector('.window-double-toggle');
-            if (dstDouble) dstDouble.checked = srcDouble;
-            handleLayerChange(clone.querySelector('.layer-type'));
-            handleTrackQtyChange(clone.querySelector('.manual-qty'));
-            handleTrackQtyChange(clone.querySelector('.motor-qty'));
-            updateWindowLiveBox(clone);
-            const sourceId = source.dataset.windowId,
-                cloneId = clone.dataset.windowId;
-            if (sourceId && cloneId) {
-                dbGetWindowPhotos(sourceId).then(photos => {
-                    if (photos && photos.length) {
-                        dbUpsertWindowPhotos(cloneId, photos.map(p => ({ ...p })));
-                        setTimeout(() => loadWindowPhotosToGrid(clone), 0);
-                    }
-                });
-            }
-            if ($('resultBox').style.display === 'block') calculateAll();
-            clone.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            updateWindowCount();
+            autoSaveDraft();
         }
 
         function handleLayerChange(sel) {
@@ -3837,6 +4193,7 @@
             }
             if (manualQty) handleTrackQtyChange(manualQty);
             updateWindowLiveBox(winItem);
+            autoSaveDraft();
         }
 
         function handleTrackQtyChange(el) {
@@ -3861,6 +4218,7 @@
             }
             const pw = winItem.querySelector('.motor-power-wrapper');
             if (pw) pw.style.display = parseInt(motorSel.value) > 0 ? 'block' : 'none';
+            autoSaveDraft();
         }
 
         // ===== 主要計算 =====
@@ -3877,18 +4235,20 @@
             $('ui-btn-print').style.display = 'inline-block';
             if (currentDocType === 'parking') {
                 $('lblClientName').innerText = tempParkingSurname;
-                $('phoneWrapper').style.display = 'none';
+                $('phoneWrapperLine').style.display = 'none';
+                $('addrLineWrapper').style.display = 'none';
             } else {
                 const titleVal = $('custTitle').value,
                     nameVal = $('custName').value;
                 $('lblClientName').innerText = nameVal ? (nameVal + " " + (d[titleVal] || "")) : "---";
                 $('lblClientPhone').innerText = $('custPhone').value || "---";
-                $('phoneWrapper').style.display = 'inline';
+                $('phoneWrapperLine').style.display = 'block';
+                const addrList = [$('addrEstate').value, $('addrBlock').value ? `Blk ${$('addrBlock').value}` : "", $(
+                        'addrFloor').value ? `${$('addrFloor').value}/F` : "", $('addrUnit').value ? `Flat ${$('addrUnit')
+                        .value}` : ""].filter(Boolean).join(' ');
+                $('lblInvoiceAddress').innerText = addrList || "---";
+                $('addrLineWrapper').style.display = 'block';
             }
-            const addrList = [$('addrEstate').value, $('addrBlock').value ? `Blk ${$('addrBlock').value}` : "", $(
-                    'addrFloor').value ? `${$('addrFloor').value}/F` : "", $('addrUnit').value ? `Flat ${$('addrUnit')
-                    .value}` : ""].filter(Boolean).join(' ');
-            $('lblInvoiceAddress').innerText = addrList || "---";
             $('lblStaffName').innerText = $('staffName').value;
             const qNo = $('quoteNo').value,
                 mDate = $('measureDate').value,
@@ -3908,8 +4268,6 @@
                 sigSection.style.display = 'none';
                 document.querySelector('.pdf-type-selector').style.display = 'flex';
                 $('ig-promo').style.display = 'none';
-                document.querySelectorAll('.receipt-highlight, .balance-highlight').forEach(el => el.style.display =
-                    'flex');
                 $('measureReceiptOnlyItem').style.display = 'block';
                 $('measureReceiptOnlyItem').innerHTML = `${d.parking_item_desc}: HK$${tempParkingAmount}`;
                 document.querySelector('.table-responsive').style.display = 'none';
@@ -3921,9 +4279,8 @@
                 $('summaryDiscRow').style.display = 'none';
                 $('summaryMeasureDeductRow').style.display = 'none';
                 $('grandTotalText').innerText = `HK$${tempParkingAmount}`;
-                $('depositPaidText').innerText = `HK$${Math.round(tempParkingAmount)}`;
-                $('lblDepositPrintText').innerText = `HK$${Math.round(tempParkingAmount)}`;
-                $('balanceDueText').innerText = `HK$0`;
+                $('summaryDepRow').style.display = 'none';
+                $('summaryBalRow').style.display = 'none';
                 setPdfMode(document.querySelector('.pdf-type-btn.active').id === 'btn-pdf-cust' ? 'customer' :
                     'company');
                 $('printDateBox').style.display = 'none';
@@ -3954,22 +4311,28 @@
                 $('grandTotalText').innerText = `HK$500`;
                 $('depositPaidText').innerText = `HK$500`;
                 $('lblDepositPrintText').innerText = `HK$500`;
-                $('balanceDueText').innerText = `HK$0`;
+                // 度尺訂金單尾款為 0，隱藏尾款行
+                $('summaryBalRow').style.display = 'none';
+                // 但訂金行顯示
+                $('summaryDepRow').style.display = 'flex';
                 setPdfMode(document.querySelector('.pdf-type-btn.active').id === 'btn-pdf-cust' ? 'customer' :
                     'company');
                 return;
             } else if (!isQuote) {
+                // 正式單據
                 invTitleEl.innerText = d.inv_type_bill;
                 badge.innerText = qNo ? "No: #M" + String(qNo).padStart(5, '0') : "No: ---";
                 quoteDisclaimer.style.display = 'none';
                 sigSection.style.display = 'grid';
                 document.querySelector('.pdf-type-selector').style.display = 'flex';
                 $('ig-promo').style.display = 'none';
+                // 顯示訂金與尾款行
                 document.querySelectorAll('.receipt-highlight, .balance-highlight').forEach(el => el.style.display =
                     'flex');
                 setPdfMode(document.querySelector('.pdf-type-btn.active').id === 'btn-pdf-cust' ? 'customer' :
                     'company');
             } else {
+                // 報價單
                 invTitleEl.innerText = d.inv_type_quote;
                 badge.innerText = (mDate && qNo) ? "No: #M" + String(qNo).padStart(5, '0') : "No: ---";
                 quoteDisclaimer.innerText = d.quote_warn;
@@ -3977,6 +4340,7 @@
                 sigSection.style.display = 'none';
                 document.querySelector('.pdf-type-selector').style.display = 'none';
                 $('ig-promo').style.display = 'block';
+                // 報價單隱藏訂金與尾款
                 document.querySelectorAll('.receipt-highlight, .balance-highlight').forEach(el => el.style.display =
                     'none');
                 document.body.classList.add('mode-customer');
@@ -4016,6 +4380,9 @@
                     ` <span style="color:#b5651d;font-size:10px;">[${d.double_charge}]</span>`;
                 if (calc.isWindowDouble) trStyle +=
                     ` <span style="color:#8b5a2b;font-size:10px;font-weight:700;">[${d.double_price_item}]</span>`;
+                if (calc.isSq && calc.effectiveArea > calc.areaSqFt) {
+                    trStyle += ` <span style="color:#2a7a3a;font-size:10px;">[最低${calc.effectiveArea}sqft]</span>`;
+                }
                 let multiplier = 'x1';
                 if (calc.isOverHeight && calc.isWindowDouble) multiplier = 'x4';
                 else if (calc.isOverHeight || calc.isWindowDouble) multiplier = 'x2';
@@ -4062,6 +4429,7 @@
             $('summaryMeasureDeductRow').style.display = deductMeasure > 0 ? 'flex' : 'none';
             if (deductMeasure > 0) { document.querySelector('#summaryMeasureDeductRow span:last-child').innerText =
                     `-HK$${deductMeasure}`; }
+            // 最終總價 = 折扣後窗位費 + 安裝費 + 附加費 - 度尺費扣除
             finalGrandTotal = Math.round(finalSub + installFee + urgentTotal - deductMeasure);
             $('grandTotalText').innerText = `HK$${finalGrandTotal}`;
             updateDepositDisplay();
@@ -4070,22 +4438,62 @@
         function updateDepositDisplay() {
             const depMode = $('depositSelect').value;
             let depositPaid = 0;
+            // 根據訂金模式計算訂金（基於最終總價 finalGrandTotal）
             if (depMode === '0.5') depositPaid = Math.round(finalGrandTotal * 0.5);
             else if (depMode === '0.3') depositPaid = Math.round(finalGrandTotal * 0.3);
             else if (depMode === 'measure_only') depositPaid = 500;
             else if (depMode === 'custom') depositPaid = parseFloat($('customDepositVal').value) || 0;
+            // 防止訂金超過總價（measure_only 除外，因為度尺訂金單總價就是 500）
             if (depMode !== 'measure_only' && depositPaid > finalGrandTotal) depositPaid = finalGrandTotal;
+            // 更新訂金顯示
             $('depositPaidText').innerText = `HK$${Math.round(depositPaid)}`;
             $('lblDepositPrintText').innerText = `HK$${Math.round(depositPaid)}`;
-            $('balanceDueText').innerText = `HK$${Math.round(finalGrandTotal - depositPaid)}`;
-            if ($('quoteNo').value) { clearTimeout(window.quoteHistorySaveTimer);
-                window.quoteHistorySaveTimer = setTimeout(() => saveCurrentQuoteRecord(), 600); }
+            // 計算尾款
+            const balance = finalGrandTotal - depositPaid;
+            // 更新尾款顯示（balanceDueText 元素已存在於 HTML 中）
+            const balEl = $('balanceDueText');
+            if (balEl) balEl.innerText = `HK$${Math.round(balance)}`;
+            // 控制尾款行顯示：餘額 <= 0 時隱藏，否則顯示
+            const balRow = $('summaryBalRow');
+            if (balRow) {
+                if (balance <= 0) {
+                    balRow.style.display = 'none';
+                } else {
+                    balRow.style.display = 'flex';
+                }
+            }
+            // 控制訂金行顯示：如果是正式單據且有訂金（或度尺訂金單）則顯示
+            const depRow = $('summaryDepRow');
+            if (depRow) {
+                // 只有正式單據或度尺訂金單才顯示訂金行
+                if (currentDocType === 'invoice' || currentDocType === 'measure_receipt') {
+                    // 如果訂金為 0 且不是度尺訂金單，隱藏
+                    if (depositPaid <= 0 && currentDocType === 'invoice') {
+                        depRow.style.display = 'none';
+                    } else {
+                        depRow.style.display = 'flex';
+                    }
+                } else {
+                    depRow.style.display = 'none';
+                }
+            }
+            // 報價單或泊車單，尾款行強制隱藏（由 calculateAll 控制）
+            if (currentDocType === 'quote' || currentDocType === 'parking') {
+                if (balRow) balRow.style.display = 'none';
+                if (depRow) depRow.style.display = 'none';
+            }
+            // 自動儲存歷史版本（僅在正式單據或報價單且有單號時）
+            if ($('quoteNo').value && (currentDocType === 'invoice' || currentDocType === 'quote')) {
+                clearTimeout(window.quoteHistorySaveTimer);
+                window.quoteHistorySaveTimer = setTimeout(() => saveCurrentQuoteRecord(), 600);
+            }
         }
 
         function handleDepositChange() {
             const val = $('depositSelect').value;
             $('customDepositWrapper').style.display = val === 'custom' ? 'block' : 'none';
             if ($('resultBox').style.display === 'block') calculateAll();
+            autoSaveDraft();
         }
 
         // ===== 生成文件 =====
@@ -4123,6 +4531,7 @@
             $('ui-btn-print').style.display = 'none';
             updateDocumentTitle();
             updateWindowCount();
+            autoSaveDraft();
         }
 
         function updateDocumentTitle() {
@@ -4145,7 +4554,7 @@
                 .filter(Boolean).join(' ') || '-';
             const total = $('grandTotalText').innerText || 'HK$0',
                 deposit = $('depositPaidText').innerText || 'HK$0';
-            const balance = $('balanceDueText').innerText || 'HK$0',
+            const balance = $('balanceDueText')?.innerText || 'HK$0',
                 installDate = $('installDate').value || '-';
             if (template === 'engineering') {
                 const lines = [`#M${qNo} | ${customer}`, `${d.ui_lbl_cphone||'電話'} ${phone}`,
@@ -4561,7 +4970,8 @@
             $('ui-inv-date').innerText = d.inv_date;
             $('lbl_print_mdate').innerText = d.lbl_m_date;
             $('lbl_print_idate').innerText = d.lbl_i_date;
-            $('ui-lbl-inv-addr').innerText = d.inv_addr;
+            const addrLabel = $('ui-lbl-inv-addr');
+            if (addrLabel) addrLabel.innerText = d.inv_addr + ':';
             $('ui-sig-client').innerText = d.sig_client;
             $('ui-sig-comp').innerText = d.sig_comp;
             $('th-size').innerText = d.th_size;
@@ -4676,13 +5086,24 @@
             if ($('resultBox').style.display === 'block') calculateAll();
         }
 
+        function applyRemarkTemplate() {
+            const val = $('remarkTemplate').value;
+            if (val) { const ta = $('specialRemarks');
+                ta.value = ta.value ? ta.value + '\n' + val : val;
+                $('remarkTemplate').value = '';
+                if ($('resultBox').style.display === 'block') calculateAll();
+                autoSaveDraft(); }
+        }
+
         // ===== 初始化 =====
         window.addEventListener('load', function() {
             document.querySelectorAll('.mini-panel').forEach(p => p.classList.remove('open'));
             $('converterPanel').classList.remove('open');
             convertArea();
             updateWindowCount();
+            const addrLabel = $('ui-lbl-inv-addr');
+            if (addrLabel) addrLabel.innerText = 'Address:';
         });
     </script>
-</body>
-</html>
+
+</body></html>
